@@ -1,4 +1,5 @@
 # pbo-gigbox
+<<<<<<< HEAD
 
 ## Project setup
 ```
@@ -22,3 +23,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+Beleg Programmierung von Benutzeroberflächen
+>>>>>>> 4f867a65ec7def95ea138599248d058915147f67
