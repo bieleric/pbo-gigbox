@@ -20,6 +20,8 @@
               <div class="drag w-90 text-white rounded m-2" v-for="element in list2" :key="element.id">{{element.name}}</div>
             </draggable>
           </b-col>
+
+          <button v-on:click="getSongs">Hier</button>
         </b-row>
      </b-container>
   </main>
@@ -42,9 +44,21 @@ export default {
       list2: [
         { name: "Song 1", id: 0 },
         { name: "Song 2", id: 1 },
-        { name: "Song 3", id: 2 }
+        { name: "Song 3", id: 2 },
+        { name: "Song 4", id: 3 },
+        { name: "Song 5", id: 4 },
+        { name: "Song 6", id: 5 },
+        { name: "Song 7", id: 6 },
+        { name: "Song 8", id: 7 },
+        { name: "Song 9", id: 8 }
       ],
     };
+  },
+
+  methods: {
+    getSongs: function() {
+       
+    }
   }
     
 }
