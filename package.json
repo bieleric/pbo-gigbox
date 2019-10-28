@@ -11,10 +11,14 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.4",
     "core-js": "^3.1.2",
+    "jquery": "^3.4.1",
     "luxon": "^1.19.3",
+    "moment": "^2.24.0",
     "vue": "^2.6.10",
     "vue-datetime": "^1.0.0-beta.10",
+    "vue-full-calendar": "^2.7.0",
     "vue-router": "^3.0.6",
+    "vuedraggable": "^2.23.2",
     "vuejs-datepicker": "^1.6.2",
     "weekstart": "^1.0.1"
   },
@@ -42,7 +46,9 @@
       "plugin:vue/essential",
       "@vue/prettier"
     ],
-    "rules": {},
+    "rules": {
+      "no-console": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

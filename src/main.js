@@ -1,18 +1,22 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
-import BootstrapVue from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
+import BootstrapVue from "bootstrap-vue";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
+import "fullcalendar/dist/fullcalendar.min.css";
+import "vue-datetime/dist/vue-datetime.css";
 
-import Datetime from 'vue-datetime';
-// You need a specific loader for CSS files
-import 'vue-datetime/dist/vue-datetime.css';
 
-Vue.use(Datetime);
+import FullCalendar from "vue-full-calendar";
+import Datetime from "vue-datetime";
+
 
 Vue.config.productionTip = false;
+
 Vue.use(BootstrapVue);
+Vue.use(FullCalendar);
+Vue.use(Datetime);
 
 new Vue({
   router,
