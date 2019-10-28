@@ -33,7 +33,7 @@ export default {
 
 <style lang="scss">
 main {
-  padding-top: 5%; 
+  padding-top: 5.0%; 
   display: flex;
   flex-direction: row;
 
