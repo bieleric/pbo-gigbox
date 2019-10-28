@@ -15,6 +15,7 @@
     "vue": "^2.6.10",
     "vue-datetime": "^1.0.0-beta.10",
     "vue-router": "^3.0.6",
+    "vuedraggable": "^2.23.2",
     "vuejs-datepicker": "^1.6.2",
     "weekstart": "^1.0.1"
   },
