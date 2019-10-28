@@ -51,8 +51,10 @@ main {
     border: solid 3px grey;
     border-radius: 10px;
     margin: 0 auto 0 auto;
+  }
 
-
+  #datepicker {
+    cursor: pointer;
   }
 }
 
