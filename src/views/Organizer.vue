@@ -32,13 +32,20 @@ export default {
   components: { draggable},
   data () {
     return {
-      list: [
-        {name: "Song 1", id: 0},
-        {name: "Song 2", id: 1},
-        {name: "Song 3", id: 2},
+      list: [{name:"Song 4", id: 3} ], 
+      gigs:[
+          {
+          e_id:0,
+          Songs:[
+            {name: "Song 1", id: 0},
+            {name: "Song 2", id: 1},
+            {name: "Song 3", id: 2}
+          ]
+          }
       ],
       events: [
         {
+          id: 0, //Event-ID
           title: 'Auftritt',
           start: '2019-11-02T12:30:00',
           end: '2019-11-02T14:30:00',
@@ -49,10 +56,17 @@ export default {
         defaultView: 'month',
         eventRender: function(event,element){
           console.log(event + 'test' + element);
+        },
+        eventClick: function(info){
+          console.log(info);
+          let e_id = info.id;
+          console.log(e_id);
+          //this.list = this.gigs;
+          console.log(this);
         }
       },
     }
-  }
+  },
 }
 </script>
 
