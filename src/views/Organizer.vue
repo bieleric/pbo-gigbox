@@ -6,7 +6,7 @@
         <b-row>
           <b-col cols ="6" class = "containerDates ">  
             <b-row class ="calendar">
-              <full-calendar :config="config" :events="events"/>
+              <full-calendar :config="config" :events="events" @event-selected="handleEventClick"/> 
             </b-row>
           </b-col>
           <b-col cols ="4" class = "containerFiles ">
@@ -26,23 +26,23 @@
 
 <script>
 import draggable from 'vuedraggable';
-
+//import FullCalendar from 'vue-full-calendar'
 export default {
   name: 'Calendar',
   components: { draggable},
   data () {
     return {
-      list: [{name:"Song 4", id: 3} ], 
+      list: [], 
       gigs:[
-          {
-          e_id:0,
-          Songs:[
-            {name: "Song 1", id: 0},
-            {name: "Song 2", id: 1},
-            {name: "Song 3", id: 2}
-          ]
-          }
-      ],
+        {
+        e_id:0,
+        Songs:[
+          {name: "Song 1", id: 0},
+          {name: "Song 2", id: 1},
+          {name: "Song 3", id: 2}
+        ]
+        }
+      ],   
       events: [
         {
           id: 0, //Event-ID
@@ -54,19 +54,18 @@ export default {
       ],
       config: {
         defaultView: 'month',
-        eventRender: function(event,element){
-          console.log(event + 'test' + element);
-        },
-        eventClick: function(info){
-          console.log(info);
-          let e_id = info.id;
-          console.log(e_id);
-          //this.list = this.gigs;
-          console.log(this.list);
-        }
       },
     }
   },
+  methods: {  
+    handleEventClick: function(info){
+        console.log(info);
+        let e_id = info.id;
+        console.log(e_id);
+        this.list = this.gigs[e_id].Songs;
+        console.log(this.list);
+    } 
+  }
 }
 </script>
 
