@@ -62,7 +62,7 @@ export default {
           let e_id = info.id;
           console.log(e_id);
           //this.list = this.gigs;
-          console.log(this);
+          console.log(this.list);
         }
       },
     }
