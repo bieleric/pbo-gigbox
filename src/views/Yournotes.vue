@@ -21,7 +21,7 @@
           </b-col>
           <b-col cols="8" id = "files">
             <draggable v-model="list2" group="songs" @start="drag=true" @end="drag=false">
-              <div class="drag w-90 text-white rounded m-2" v-for="element in list2" :key="element.id">{{element.name}}</div>
+              <div id="songs" class="drag w-90 text-white rounded m-2" v-for="element in list2" :key="element.id">{{element.name}}</div>
             </draggable>
           </b-col>
 
@@ -46,7 +46,7 @@ export default {
     return {
       files: [],
       list2: [
-        { name: "Song 1", id: 0 },
+        { name: "Song 1", id: 0, path: "C:/Users/Eric/Desktop/AnotherBrickInTheWall.pdf"},
         { name: "Song 2", id: 1 },
         { name: "Song 3", id: 2 },
         { name: "Song 4", id: 3 },
@@ -78,21 +78,21 @@ export default {
     },
     
     save: function() {
-        /*let label = document.getElementById('labelAddBtn');
-        let format = new RegExp(/[\/\\]([\w\d\s\.\-\(\)]+)$/);
-        let text = label.value.match(format)[1];
-        var sub = text.substring(text.length-4, text.length);
-        if(sub !== ".pdf")
-        {
-            alert("Es werden nur pdf-Dokumente unterstützt.");
-        }*/
+      // select just .pdf-files
+      /*let label = document.getElementById('labelAddBtn');
+      let format = new RegExp(/[\/\\]([\w\d\s\.\-\(\)]+)$/);
+      let text = label.value.match(format)[1];
+      var sub = text.substring(text.length-4, text.length);
+      if(sub !== ".pdf")
+      {
+          alert("Es werden nur pdf-Dokumente unterstützt.");
+      }*/
 
-        let title = document.getElementById('labelAddBtn').innerHTML;
-        alert(title);
-
-        localStorage.setItem(title, "pdf");
-        let local = localStorage.getItem(title);
-        alert(local);
+      let title = document.getElementById('labelAddBtn').innerHTML;
+      alert(title);
+      localStorage.setItem(title, title); //(key, value)
+      let local = localStorage.getItem(title);
+      alert(local);
     },
 
     clear: function() {
@@ -124,6 +124,14 @@ main {
   padding-top: 5.0%; 
   display: flex;
   flex-direction: row;
+
+  #songs {
+    cursor: grab;
+  }
+
+  #songs:active {
+    cursor: grabbing;
+  }
 
   #deleteBtn{
     margin-top:50%;
