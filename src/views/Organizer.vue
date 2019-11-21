@@ -64,7 +64,22 @@ export default {
         console.log(e_id);
         this.list = this.gigs[e_id].Songs;
         console.log(this.list);
+        console.log(JSON.parse(localStorage.getItem('gigs')));
     } 
+  },
+  watch: {
+    gigs: function(){
+        localStorage.setItem('gigs',this.gigs);
+    },
+    events: function(){
+        localStorage.setItem('events',this.events);
+    },
+    list: function(){
+        localStorage.setItem('list',this.list);
+    } 
+  },
+  mounted() {
+    localStorage.setItem('gigs',JSON.stringify(this.gigs));
   }
 }
 </script>
