@@ -4,89 +4,118 @@
     <main>
       <b-container fluid>
         <b-row>
-          <b-col cols ="6" class = "containerDates ">  
-            <b-row class ="calendar">
-              <full-calendar :config="config" :events="events" @event-selected="handleEventClick"/> 
+          <b-col cols="6" class="containerDates ">
+            <b-row class="calendar">
+              <full-calendar
+                :config="config"
+                :events="events"
+                @event-selected="handleEventClick"
+              />
             </b-row>
           </b-col>
-          <b-col cols ="4" class = "containerFiles ">
-            <b-row class ="sheets">
+          <b-col cols="4" class="containerFiles ">
+            <b-row class="sheets">
               <b-col>
-                <draggable v-model="list" group="people" @start="drag=true" @end="drag=false">
-                  <div class="drag w-90 text-white rounded m-2" v-for="element in list" :key="element.id">{{element.name}}</div>
+                <draggable
+                  v-model="songList"
+                  group="people"
+                  @start="drag = true"
+                  @end="drag = false"
+                >
+                <div class ="w-90 rounded m-2 gig-header">
+                </div> 
+                  <div
+                    class="drag w-90 text-white rounded m-2"
+                    v-for="element in songList"
+                    :key="element.id"
+                  >
+                    {{ element.name }}
+                  </div>
                 </draggable>
               </b-col>
             </b-row>
           </b-col>
         </b-row>
-     </b-container>
-  </main>
+      </b-container>
+    </main>
   </div>
 </template>
 
 <script>
-import draggable from 'vuedraggable';
+import draggable from "vuedraggable";
+import * as storage from "../assets/storage.js";
 //import FullCalendar from 'vue-full-calendar'
 export default {
-  name: 'Calendar',
-  components: { draggable},
-  data () {
+  name: "Calendar",
+  components: { draggable },
+  data() {
     return {
-      list: [], 
-      gigs:[
+      songList: [],
+      gigs: [
         {
-        e_id:0,
-        Songs:[
-          {name: "Song 1", id: 0},
-          {name: "Song 2", id: 1},
-          {name: "Song 3", id: 2}
-        ]
+          eID: 0,
+          Lieder: [
+            { name: "Song 1", id: 0 },
+            { name: "Song 2", id: 1 },
+            { name: "Song 3", id: 2 }
+          ]
         }
-      ],   
+      ],
       events: [
         {
           id: 0, //Event-ID
-          title: 'Auftritt',
-          start: '2019-11-02T12:30:00',
-          end: '2019-11-02T14:30:00',
+          title: "Auftritt",
+          start: "2019-11-02T12:30:00",
+          end: "2019-11-02T14:30:00",
           allDay: false,
-        },
+          info: ""
+        }
       ],
       config: {
-        defaultView: 'month',
+        defaultView: "month"
       },
+      eID: -1,
+      currEvent: {
+        title: '',
+        start: "",
+        end: "",
+        allDay: false,
+        info: ""
+      }
+    };
+  },
+  methods: {
+    handleEventClick: function(info) {
+      console.log(info);
+      this.eID = info.id;
+      let tmp = storage.getGigs();
+      console.log(tmp);
+      this.songList = tmp[this.eID].Songs;
+      console.log(this.eID);
     }
   },
-  methods: {  
-    handleEventClick: function(info){
-        console.log(info);
-        let e_id = info.id;
-        console.log(e_id);
-        this.list = this.gigs[e_id].Songs;
-        console.log(this.list);
-        console.log(JSON.parse(localStorage.getItem('gigs')));
-    } 
-  },
   watch: {
-    gigs: function(){
-        localStorage.setItem('gigs',this.gigs);
+    gigs: function() {
+      storage.setGigs(this.gigs);
     },
-    events: function(){
-        localStorage.setItem('events',this.events);
+    events: function() {
+      storage.setEvents(this.events);
     },
-    list: function(){
-        localStorage.setItem('list',this.list);
-    } 
-  },
-  mounted() {
-    localStorage.setItem('gigs',JSON.stringify(this.gigs));
+    songs: function() {
+      storage.setSongs(this.songs);
+    },
+    eID: function(){
+      let tmpEvent = storage.getEvents();
+      console.log(tmpEvent);
+      this.currEvent = tmpEvent[this.eID];
+    }
   }
-}
+};
 </script>
 
 <style lang="scss">
 main {
-  padding-top: 5.0%;
+  padding-top: 5%;
 
   .containerDates {
     height: 100%;
@@ -105,7 +134,6 @@ main {
     height: 100%;
     background-color: white;
     padding-top: 5%;
-
   }
 
   .sheets {
@@ -136,5 +164,4 @@ main {
     background-color: #42b983;
   }
 }
-
 </style>
