@@ -10,6 +10,7 @@
                 :config="config"
                 :events="events"
                 @event-selected="handleEventClick"
+                @day-click="handleDateClick"
               />
             </b-row>
           </b-col>
@@ -23,6 +24,8 @@
                   @end="drag = false"
                 >
                 <div class ="w-90 rounded m-2 gig-header">
+                  <p contenteditable v-text="currEvent.title" @blur="setCurrEventTitle" @keydown.enter="setCurrEventTitleEnd"> </p>
+                    <p contenteditable v-if="this.currEvent.info.length > 0 " v-text="currEvent.info" @blur="setCurrEventInfo" @keydown.enter="setCurrEventInfoEnd"> </p>
                 </div> 
                   <div
                     class="drag w-90 text-white rounded m-2"
@@ -36,41 +39,40 @@
             </b-row>
           </b-col>
         </b-row>
+        <b-row>
+          <b-col offset-md="7" class="containerDeleteBtn">
+                  <label id="deleteBtn" class="btn"
+                    ><font-awesome-icon icon="trash-alt" class="icon"
+                  /></label>
+          </b-col>
+
+          <b-col  class="containerAddBtn">
+            <label for="addBtn" class="btn" id="addBtnLabel">
+              <font-awesome-icon icon="plus" class="icon"/>
+            </label>
+            <b-button v-b-modal.songModal id="addBtn" style="display: none;" />
+          </b-col>
+        </b-row>
       </b-container>
     </main>
+        <SongModal :currSongList="songList"></SongModal>
+        <EventModal :event="currEvent"></EventModal>
   </div>
 </template>
 
 <script>
 import draggable from "vuedraggable";
 import * as storage from "../assets/storage.js";
-//import FullCalendar from 'vue-full-calendar'
+import SongModal from "../components/SongModal.vue";
+import EventModal from "../components/EventModal.vue";
 export default {
   name: "Calendar",
-  components: { draggable },
+  components: { draggable,SongModal,EventModal },
   data() {
     return {
       songList: [],
-      gigs: [
-        {
-          eID: 0,
-          Lieder: [
-            { name: "Song 1", id: 0 },
-            { name: "Song 2", id: 1 },
-            { name: "Song 3", id: 2 }
-          ]
-        }
-      ],
-      events: [
-        {
-          id: 0, //Event-ID
-          title: "Auftritt",
-          start: "2019-11-02T12:30:00",
-          end: "2019-11-02T14:30:00",
-          allDay: false,
-          info: ""
-        }
-      ],
+      gigs: storage.getGigs(),
+      events: storage.getEvents(),
       config: {
         defaultView: "month"
       },
@@ -86,12 +88,34 @@ export default {
   },
   methods: {
     handleEventClick: function(info) {
-      console.log(info);
       this.eID = info.id;
       let tmp = storage.getGigs();
-      console.log(tmp);
       this.songList = tmp[this.eID].Songs;
-      console.log(this.eID);
+    },
+    handleDateClick: function(info){
+      console.log(info);
+      this.$bvModal.show('eventModal');
+    },
+    setCurrEventTitle: function(event) {
+      let tmp = event.target.innerText;
+      this.currEvent.title = tmp;
+    },
+
+    setCurrEventTitleEnd: function(event) {
+      event.target.blur();
+    },
+    setCurrEventInfo: function(event) {
+      let tmp = event.target.innerText;
+      this.currEvent.info = tmp;
+      this.events[this.eID].info = tmp;
+      console.log(this.currEvent);
+    },
+
+    setCurrEventInfoEnd: function(event) {
+      event.target.blur();
+    },
+    modalShow: function(){
+      this.$modal.show('SongModal');
     }
   },
   watch: {
@@ -100,14 +124,19 @@ export default {
     },
     events: function() {
       storage.setEvents(this.events);
+      console.log(storage.getEvents());
     },
     songs: function() {
       storage.setSongs(this.songs);
     },
     eID: function(){
       let tmpEvent = storage.getEvents();
-      console.log(tmpEvent);
       this.currEvent = tmpEvent[this.eID];
+    },
+    currEvent: function(){
+      this.events[this.eID] = this.currEvent;
+      console.log(this.events);
+      storage.setEvents(this.events);
     }
   }
 };
@@ -162,6 +191,29 @@ main {
     height: 40px;
     vertical-align: middle;
     background-color: #42b983;
+  }
+
+  .icon {
+    font-size: 300%;
+  }
+
+  .btn {
+    background-color: #42b983;
+    color: white;
+    cursor: pointer;
+    width: 20%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2em;
+  }
+
+  #deleteBtn{
+    margin-left: 50%;
+  }
+  #addBtnLabel{
+    margin-left: 25%;
   }
 }
 </style>
