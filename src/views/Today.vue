@@ -29,12 +29,14 @@ import draggable from "vuedraggable";
 import pdf from "pdfvuer";
 //import * as storage from "../assets/storage.js";
 
+
 export default {
   name: "Datepicker",
   components: {
     datetime: Datetime,
     draggable,
     pdf
+
   },
 
   data() {
@@ -88,7 +90,7 @@ main {
     overflow-x: hidden;
     overflow-y: scroll;
   }
-  
+
   #organizer {
     height: 30em;
     width: 45%;
