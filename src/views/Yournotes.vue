@@ -2,26 +2,64 @@
   <div class="yournotes">
     <h1>Your Notes</h1>
     <main>
-      <b-container >
-        <b-row class ="mb-5" >
-          <b-col class ="mb-5" cols="2" >
-            <label id="labelAddBtn" for="addBtn" class="btn addAndDeleteBtn"><font-awesome-icon icon="plus" class="icon" /></label>
-            <input type="file" id ="addBtn" style="display: none;" v-on:change="updateAddButton">
+      <b-container>
+        <b-row class="mb-5">
+          <b-col class="mb-5" cols="2">
+            <label id="labelAddBtn" for="addBtn" class="btn addAndDeleteBtn"
+              ><font-awesome-icon icon="plus" class="icon"
+            /></label>
+            <input
+              type="file"
+              id="addBtn"
+              style="display: none;"
+              v-on:change="updateAddButton"
+            />
             <div id="saveAndClearWrapper">
-              <button class="btn btn-primary saveAndClearBtn" id="saveBtn" v-on:click="save">Save</button>
-              <button class="btn btn-warning saveAndClearBtn" id="clearBtn" v-on:click="clear">Clear</button>
+              <button
+                class="btn btn-primary saveAndClearBtn"
+                id="saveBtn"
+                v-on:click="save"
+              >
+                Save
+              </button>
+              <button
+                class="btn btn-warning saveAndClearBtn"
+                id="clearBtn"
+                v-on:click="clear"
+              >
+                Clear
+              </button>
             </div>
             <b-row>
               <b-col>
-                <draggable v-model="list2" group="songs" @start="drag=true" @end="drag=false">
-                  <label id ="deleteBtn" class="btn addAndDeleteBtn"><font-awesome-icon icon="trash-alt" class="icon" /></label>
+                <draggable
+                  v-model="list2"
+                  group="songs"
+                  @start="drag = true"
+                  @end="drag = false"
+                >
+                  <label id="deleteBtn" class="btn addAndDeleteBtn"
+                    ><font-awesome-icon icon="trash-alt" class="icon"
+                  /></label>
                 </draggable>
               </b-col>
             </b-row>
           </b-col>
-          <b-col cols="8" id = "files">
-            <draggable v-model="list2" group="songs" @start="drag=true" @end="drag=false">
-              <div id="songs" class="drag w-90 text-white rounded m-2" v-for="element in list2" :key="element.id">{{element.name}}</div>
+          <b-col cols="8" id="files">
+            <draggable
+              v-model="list2"
+              group="songs"
+              @start="drag = true"
+              @end="drag = false"
+            >
+              <div
+                id="songs"
+                class="drag w-90 text-white rounded m-2"
+                v-for="element in list2"
+                :key="element.id"
+              >
+                {{ element.name }}
+              </div>
             </draggable>
           </b-col>
 
@@ -46,7 +84,11 @@ export default {
     return {
       files: [],
       list2: [
-        { name: "Song 1", id: 0, path: "C:/Users/Eric/Desktop/AnotherBrickInTheWall.pdf"},
+        {
+          name: "Song 1",
+          id: 0,
+          path: "C:/Users/Eric/Desktop/AnotherBrickInTheWall.pdf"
+        },
         { name: "Song 2", id: 1 },
         { name: "Song 3", id: 2 },
         { name: "Song 4", id: 3 },
@@ -60,15 +102,13 @@ export default {
   },
 
   methods: {
-    getSongs: function() {
-       
-    },
+    getSongs: function() {},
 
     updateAddButton: function() {
-      let input = document.getElementById('addBtn');
-      let label = document.getElementById('labelAddBtn');
-      let saveButton = document.getElementById('saveBtn');
-      let clearButton = document.getElementById('clearBtn');
+      let input = document.getElementById("addBtn");
+      let label = document.getElementById("labelAddBtn");
+      let saveButton = document.getElementById("saveBtn");
+      let clearButton = document.getElementById("clearBtn");
       let filename = input.files.item(0).name;
 
       label.innerHTML = filename;
@@ -76,7 +116,7 @@ export default {
       clearButton.classList.add("show");
       saveButton.classList.add("show");
     },
-    
+
     save: function() {
       // select just .pdf-files
       /*let label = document.getElementById('labelAddBtn');
@@ -88,7 +128,7 @@ export default {
           alert("Es werden nur pdf-Dokumente unterstützt.");
       }*/
 
-      let title = document.getElementById('labelAddBtn').innerHTML;
+      let title = document.getElementById("labelAddBtn").innerHTML;
       alert(title);
       localStorage.setItem(title, title); //(key, value)
       let local = localStorage.getItem(title);
@@ -96,11 +136,10 @@ export default {
     },
 
     clear: function() {
-
-      let input = document.getElementById('addBtn');
-      let label = document.getElementById('labelAddBtn');
-      let saveButton = document.getElementById('saveBtn');
-      let clearButton = document.getElementById('clearBtn');
+      let input = document.getElementById("addBtn");
+      let label = document.getElementById("labelAddBtn");
+      let saveButton = document.getElementById("saveBtn");
+      let clearButton = document.getElementById("clearBtn");
 
       saveButton.classList.remove("show");
       clearButton.classList.remove("show");
@@ -116,7 +155,7 @@ export default {
       label.appendChild(icon);
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -133,8 +172,8 @@ main {
     cursor: grabbing;
   }
 
-  #deleteBtn{
-    margin-top:50%;
+  #deleteBtn {
+    margin-top: 50%;
   }
 
   #files {
@@ -169,8 +208,6 @@ main {
       display: block;
     }
   }
-
-
 
   .icon {
     font-size: 300%;
