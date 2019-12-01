@@ -27,22 +27,22 @@
 
           <!--<button v-on:click="getSongs">Hier</button>-->
         </b-row>
-     </b-container>
-  </main>
+      </b-container>
+    </main>
   </div>
 </template>
 
 <script>
-import draggable from 'vuedraggable';
+import draggable from "vuedraggable";
 
 export default {
   name: "Yournotes",
 
   components: {
-    draggable,
+    draggable
   },
 
-  data (){
+  data() {
     return {
       files: [],
       list2: [
@@ -55,7 +55,7 @@ export default {
         { name: "Song 7", id: 6 },
         { name: "Song 8", id: 7 },
         { name: "Song 9", id: 8 }
-      ],
+      ]
     };
   },
 
@@ -121,7 +121,7 @@ export default {
 
 <style lang="scss">
 main {
-  padding-top: 5.0%; 
+  padding-top: 5%;
   display: flex;
   flex-direction: row;
 
@@ -183,5 +183,4 @@ main {
     background-color: #42b983;
   }
 }
-
 </style>
