@@ -12,7 +12,6 @@
                 @event-selected="handleEventClick"
                 @day-click="handleDateClick"
               />
-
             </b-row>
           </b-col>
           <b-col cols="4" class="containerFiles ">
@@ -24,10 +23,21 @@
                   @start="drag = true"
                   @end="drag = false"
                 >
-                <div class ="w-90 rounded m-2 gig-header">
-                  <p contenteditable v-text="currEvent.title" @blur="setCurrEventTitle" @keydown.enter="setCurrEventTitleEnd"> </p>
-                    <p contenteditable v-if="this.currEvent.info.length > 0 " v-text="currEvent.info" @blur="setCurrEventInfo" @keydown.enter="setCurrEventInfoEnd"> </p>
-                </div> 
+                  <div class="w-90 rounded m-2 gig-header">
+                    <p
+                      contenteditable
+                      v-text="currEvent.title"
+                      @blur="setCurrEventTitle"
+                      @keydown.enter="setCurrEventTitleEnd"
+                    ></p>
+                    <p
+                      contenteditable
+                      v-if="this.currEvent.info.length > 0"
+                      v-text="currEvent.info"
+                      @blur="setCurrEventInfo"
+                      @keydown.enter="setCurrEventInfoEnd"
+                    ></p>
+                  </div>
                   <div
                     class="drag w-90 text-white rounded m-2"
                     v-for="element in songList"
@@ -42,22 +52,22 @@
         </b-row>
         <b-row>
           <b-col offset-md="7" class="containerDeleteBtn">
-                  <label id="deleteBtn" class="btn"
-                    ><font-awesome-icon icon="trash-alt" class="icon"
-                  /></label>
+            <label id="deleteBtn1" class="btn"
+              ><font-awesome-icon icon="trash-alt" class="icon"
+            /></label>
           </b-col>
 
-          <b-col  class="containerAddBtn">
+          <b-col class="containerAddBtn">
             <label for="addBtn" class="btn" id="addBtnLabel">
-              <font-awesome-icon icon="plus" class="icon"/>
+              <font-awesome-icon icon="plus" class="icon" />
             </label>
             <b-button v-b-modal.songModal id="addBtn" style="display: none;" />
           </b-col>
         </b-row>
       </b-container>
     </main>
-        <SongModal :currSongList="songList"></SongModal>
-        <EventModal :event="currEvent"></EventModal>
+    <SongModal :currSongList="songList"></SongModal>
+    <EventModal :event="currEvent"></EventModal>
   </div>
 </template>
 
@@ -68,7 +78,7 @@ import SongModal from "../components/SongModal.vue";
 import EventModal from "../components/EventModal.vue";
 export default {
   name: "Calendar",
-  components: { draggable,SongModal,EventModal },
+  components: { draggable, SongModal, EventModal },
   data() {
     return {
       songList: [],
@@ -79,7 +89,7 @@ export default {
       },
       eID: -1,
       currEvent: {
-        title: '',
+        title: "",
         start: "",
         end: "",
         allDay: false,
@@ -93,9 +103,9 @@ export default {
       let tmp = storage.getGigs();
       this.songList = tmp[this.eID].Songs;
     },
-    handleDateClick: function(info){
+    handleDateClick: function(info) {
       console.log(info);
-      this.$bvModal.show('eventModal');
+      this.$bvModal.show("eventModal");
     },
     setCurrEventTitle: function(event) {
       let tmp = event.target.innerText;
@@ -115,8 +125,8 @@ export default {
     setCurrEventInfoEnd: function(event) {
       event.target.blur();
     },
-    modalShow: function(){
-      this.$modal.show('SongModal');
+    modalShow: function() {
+      this.$modal.show("SongModal");
     }
   },
   watch: {
@@ -130,11 +140,11 @@ export default {
     songs: function() {
       storage.setSongs(this.songs);
     },
-    eID: function(){
+    eID: function() {
       let tmpEvent = storage.getEvents();
       this.currEvent = tmpEvent[this.eID];
     },
-    currEvent: function(){
+    currEvent: function() {
       this.events[this.eID] = this.currEvent;
       console.log(this.events);
       storage.setEvents(this.events);
@@ -210,10 +220,10 @@ main {
     margin-top: 2em;
   }
 
-  #deleteBtn{
+  #deleteBtn1 {
     margin-left: 50%;
   }
-  #addBtnLabel{
+  #addBtnLabel {
     margin-left: 25%;
   }
 }
