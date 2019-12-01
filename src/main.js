@@ -20,12 +20,15 @@ Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 import FullCalendar from "vue-full-calendar";
 import Datetime from "vue-datetime";
+import VModal from "vue-js-modal";
+
 
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
 Vue.use(FullCalendar);
 Vue.use(Datetime);
+Vue.use(VModal);
 
 new Vue({
   router,
