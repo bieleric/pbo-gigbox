@@ -2,7 +2,13 @@
   <div class="today">
     <h1>Today</h1>
     <main class="d-flex p-2 bd-highlight">
-      <section id="notesheet" class="rounded"></section>
+      <section id="notesheet" class="rounded">
+        <pdf src="src/assets/AnotherBrickInTheWall.pdf" :page="1">
+          <template slot="loading">
+            loading content here...
+          </template>
+        </pdf>
+      </section>
       <section id="organizer" class="rounded">
         <datetime
           id="datepicker"
@@ -18,9 +24,11 @@
           @end="drag = false"
         >
           <div
+            id="songs"
             class="drag w-90 text-white rounded m-2"
             v-for="element in list2"
             :key="element.id"
+            @click="showPdf(element.id)"
           >
             {{ element.name }}
           </div>
@@ -33,22 +41,47 @@
 <script>
 import { Datetime } from "vue-datetime";
 import draggable from "vuedraggable";
+import pdf from "pdfvuer";
+//import * as storage from "../assets/storage.js";
 
 export default {
   name: "Datepicker",
   components: {
     datetime: Datetime,
-    draggable
+    draggable,
+    pdf
   },
+
   data() {
     return {
       date: "",
       list2: [
-        { name: "Song 1", id: 0 },
-        { name: "Song 2", id: 1 },
-        { name: "Song 3", id: 2 }
-      ]
+        {
+          name: "Another Brick In The Wall",
+          id: 0,
+          path: "AnotherBrickInTheWall.pdf"
+        },
+        {
+          name: "Song 2",
+          id: 1,
+          path: "path/to/song2.pdf"
+        },
+        {
+          name: "Song 3",
+          id: 2,
+          path: "path/to/song3.pdf"
+        }
+      ],
+      path: "src/assets/AnotherBrickInTheWall.pdf"
     };
+  },
+
+  methods: {
+    showPdf: function(key) {
+      let pfad = this.list2[key].path;
+
+      alert(pfad);
+    }
   }
 };
 </script>
@@ -58,11 +91,17 @@ main {
   display: flex;
   flex-direction: row;
 
+  #songs {
+    cursor: pointer;
+  }
+
   #notesheet {
     height: 30em;
     width: 45%;
     border: solid 3px grey;
     margin: 0 auto 0 auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
 
   #organizer {
@@ -72,6 +111,7 @@ main {
     margin: 0 auto 0 auto;
   }
 
+  // Theme of datepicker
   .theme-orange .vdatetime-popup__header,
   .theme-orange .vdatetime-calendar__month__day--selected > span > span,
   .theme-orange .vdatetime-calendar__month__day--selected:hover > span > span {

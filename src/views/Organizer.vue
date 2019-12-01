@@ -6,21 +6,41 @@
         <b-row>
           <b-col cols="6" class="containerDates ">
             <b-row class="calendar">
-              <full-calendar :config="config" :events="events" />
+              <full-calendar
+                :config="config"
+                :events="events"
+                @event-selected="handleEventClick"
+                @day-click="handleDateClick"
+              />
             </b-row>
           </b-col>
           <b-col cols="4" class="containerFiles ">
             <b-row class="sheets">
               <b-col>
                 <draggable
-                  v-model="list"
+                  v-model="songList"
                   group="people"
                   @start="drag = true"
                   @end="drag = false"
                 >
+                  <div class="w-90 rounded m-2 gig-header">
+                    <p
+                      contenteditable
+                      v-text="currEvent.title"
+                      @blur="setCurrEventTitle"
+                      @keydown.enter="setCurrEventTitleEnd"
+                    ></p>
+                    <p
+                      contenteditable
+                      v-if="this.currEvent.info.length > 0"
+                      v-text="currEvent.info"
+                      @blur="setCurrEventInfo"
+                      @keydown.enter="setCurrEventInfoEnd"
+                    ></p>
+                  </div>
                   <div
                     class="drag w-90 text-white rounded m-2"
-                    v-for="element in list"
+                    v-for="element in songList"
                     :key="element.id"
                   >
                     {{ element.name }}
@@ -30,36 +50,105 @@
             </b-row>
           </b-col>
         </b-row>
+        <b-row>
+          <b-col offset-md="7" class="containerDeleteBtn">
+            <label id="deleteBtn1" class="btn"
+              ><font-awesome-icon icon="trash-alt" class="icon"
+            /></label>
+          </b-col>
+
+          <b-col class="containerAddBtn">
+            <label for="addBtn" class="btn" id="addBtnLabel">
+              <font-awesome-icon icon="plus" class="icon" />
+            </label>
+            <b-button v-b-modal.songModal id="addBtn" style="display: none;" />
+          </b-col>
+        </b-row>
       </b-container>
     </main>
+    <SongModal :currSongList="songList"></SongModal>
+    <EventModal :event="currEvent"></EventModal>
   </div>
 </template>
 
 <script>
 import draggable from "vuedraggable";
-
+import * as storage from "../assets/storage.js";
+import SongModal from "../components/SongModal.vue";
+import EventModal from "../components/EventModal.vue";
 export default {
   name: "Calendar",
-  components: { draggable },
+  components: { draggable, SongModal, EventModal },
   data() {
     return {
-      list: [
-        { name: "Song 1", id: 0 },
-        { name: "Song 2", id: 1 },
-        { name: "Song 3", id: 2 }
-      ],
-      events: [
-        {
-          title: "Auftritt",
-          start: "2019-11-02T12:30:00",
-          end: "2019-11-02T14:30:00",
-          allDay: false
-        }
-      ],
+      songList: [],
+      gigs: storage.getGigs(),
+      events: storage.getEvents(),
       config: {
         defaultView: "month"
+      },
+      eID: -1,
+      currEvent: {
+        title: "",
+        start: "",
+        end: "",
+        allDay: false,
+        info: ""
       }
     };
+  },
+  methods: {
+    handleEventClick: function(info) {
+      this.eID = info.id;
+      let tmp = storage.getGigs();
+      this.songList = tmp[this.eID].Songs;
+    },
+    handleDateClick: function(info) {
+      console.log(info);
+      this.$bvModal.show("eventModal");
+    },
+    setCurrEventTitle: function(event) {
+      let tmp = event.target.innerText;
+      this.currEvent.title = tmp;
+    },
+
+    setCurrEventTitleEnd: function(event) {
+      event.target.blur();
+    },
+    setCurrEventInfo: function(event) {
+      let tmp = event.target.innerText;
+      this.currEvent.info = tmp;
+      this.events[this.eID].info = tmp;
+      console.log(this.currEvent);
+    },
+
+    setCurrEventInfoEnd: function(event) {
+      event.target.blur();
+    },
+    modalShow: function() {
+      this.$modal.show("SongModal");
+    }
+  },
+  watch: {
+    gigs: function() {
+      storage.setGigs(this.gigs);
+    },
+    events: function() {
+      storage.setEvents(this.events);
+      console.log(storage.getEvents());
+    },
+    songs: function() {
+      storage.setSongs(this.songs);
+    },
+    eID: function() {
+      let tmpEvent = storage.getEvents();
+      this.currEvent = tmpEvent[this.eID];
+    },
+    currEvent: function() {
+      this.events[this.eID] = this.currEvent;
+      console.log(this.events);
+      storage.setEvents(this.events);
+    }
   }
 };
 </script>
@@ -113,6 +202,29 @@ main {
     height: 40px;
     vertical-align: middle;
     background-color: #42b983;
+  }
+
+  .icon {
+    font-size: 300%;
+  }
+
+  .btn {
+    background-color: #42b983;
+    color: white;
+    cursor: pointer;
+    width: 20%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2em;
+  }
+
+  #deleteBtn1 {
+    margin-left: 50%;
+  }
+  #addBtnLabel {
+    margin-left: 25%;
   }
 }
 </style>
