@@ -2,46 +2,30 @@
   <div class="yournotes">
     <h1>Your Notes</h1>
     <main>
-      <b-container>
-        <b-row class="mb-5">
-          <b-col class="mb-5" cols="2">
-            <label for="addBtn" class="btn"
-              ><font-awesome-icon icon="plus" class="icon"
-            /></label>
-            <input type="file" id="addBtn" style="display: none;" />
+      <b-container >
+        <b-row class ="mb-5" >
+          <b-col class ="mb-5" cols="2" >
+            <label id="labelAddBtn" for="addBtn" class="btn addAndDeleteBtn"><font-awesome-icon icon="plus" class="icon" /></label>
+            <input type="file" id ="addBtn" style="display: none;" v-on:change="updateAddButton">
+            <div id="saveAndClearWrapper">
+              <button class="btn btn-primary saveAndClearBtn" id="saveBtn" v-on:click="save">Save</button>
+              <button class="btn btn-warning saveAndClearBtn" id="clearBtn" v-on:click="clear">Clear</button>
+            </div>
             <b-row>
               <b-col>
-                <draggable
-                  v-model="list2"
-                  group="people"
-                  @start="drag = true"
-                  @end="drag = false"
-                >
-                  <label id="deleteBtn" class="btn"
-                    ><font-awesome-icon icon="trash-alt" class="icon"
-                  /></label>
+                <draggable v-model="list2" group="songs" @start="drag=true" @end="drag=false">
+                  <label id ="deleteBtn" class="btn addAndDeleteBtn"><font-awesome-icon icon="trash-alt" class="icon" /></label>
                 </draggable>
               </b-col>
             </b-row>
           </b-col>
-          <b-col cols="8" id="files">
-            <draggable
-              v-model="list2"
-              group="people"
-              @start="drag = true"
-              @end="drag = false"
-            >
-              <div
-                class="drag w-90 text-white rounded m-2"
-                v-for="element in list2"
-                :key="element.id"
-              >
-                {{ element.name }}
-              </div>
+          <b-col cols="8" id = "files">
+            <draggable v-model="list2" group="songs" @start="drag=true" @end="drag=false">
+              <div id="songs" class="drag w-90 text-white rounded m-2" v-for="element in list2" :key="element.id">{{element.name}}</div>
             </draggable>
           </b-col>
 
-          <button v-on:click="getSongs">Hier</button>
+          <!--<button v-on:click="getSongs">Hier</button>-->
         </b-row>
       </b-container>
     </main>
@@ -62,7 +46,7 @@ export default {
     return {
       files: [],
       list2: [
-        { name: "Song 1", id: 0 },
+        { name: "Song 1", id: 0, path: "C:/Users/Eric/Desktop/AnotherBrickInTheWall.pdf"},
         { name: "Song 2", id: 1 },
         { name: "Song 3", id: 2 },
         { name: "Song 4", id: 3 },
@@ -76,9 +60,63 @@ export default {
   },
 
   methods: {
-    getSongs: function() {}
+    getSongs: function() {
+       
+    },
+
+    updateAddButton: function() {
+      let input = document.getElementById('addBtn');
+      let label = document.getElementById('labelAddBtn');
+      let saveButton = document.getElementById('saveBtn');
+      let clearButton = document.getElementById('clearBtn');
+      let filename = input.files.item(0).name;
+
+      label.innerHTML = filename;
+
+      clearButton.classList.add("show");
+      saveButton.classList.add("show");
+    },
+    
+    save: function() {
+      // select just .pdf-files
+      /*let label = document.getElementById('labelAddBtn');
+      let format = new RegExp(/[\/\\]([\w\d\s\.\-\(\)]+)$/);
+      let text = label.value.match(format)[1];
+      var sub = text.substring(text.length-4, text.length);
+      if(sub !== ".pdf")
+      {
+          alert("Es werden nur pdf-Dokumente unterstützt.");
+      }*/
+
+      let title = document.getElementById('labelAddBtn').innerHTML;
+      alert(title);
+      localStorage.setItem(title, title); //(key, value)
+      let local = localStorage.getItem(title);
+      alert(local);
+    },
+
+    clear: function() {
+
+      let input = document.getElementById('addBtn');
+      let label = document.getElementById('labelAddBtn');
+      let saveButton = document.getElementById('saveBtn');
+      let clearButton = document.getElementById('clearBtn');
+
+      saveButton.classList.remove("show");
+      clearButton.classList.remove("show");
+
+      input.value = "";
+      label.innerHTML = "";
+
+      let icon = document.createElement("font-awesome-icon");
+      icon.setAttribute("class", "icon");
+      icon.setAttribute("icon", "plus");
+      icon.style = "display: block; border: solid 3px red; padding: 20px;";
+
+      label.appendChild(icon);
+    }
   }
-};
+}
 </script>
 
 <style lang="scss">
@@ -87,8 +125,16 @@ main {
   display: flex;
   flex-direction: row;
 
-  #deleteBtn {
-    margin-top: 50%;
+  #songs {
+    cursor: grab;
+  }
+
+  #songs:active {
+    cursor: grabbing;
+  }
+
+  #deleteBtn{
+    margin-top:50%;
   }
 
   #files {
@@ -98,7 +144,7 @@ main {
     margin: 0 auto 0 auto;
   }
 
-  .btn {
+  .addAndDeleteBtn {
     background-color: #42b983;
     color: white;
     cursor: pointer;
@@ -107,7 +153,24 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 80%;
   }
+
+  #saveAndClearWrapper {
+    display: flex;
+    flex-flow: row;
+
+    .saveAndClearBtn {
+      width: 45%;
+      display: none;
+      margin: 0 auto 0 auto;
+    }
+    .show {
+      display: block;
+    }
+  }
+
+
 
   .icon {
     font-size: 300%;
