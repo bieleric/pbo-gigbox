@@ -14,13 +14,13 @@
 import * as storage from "./assets/storage.js";
 export default {
   name: "App",
-  data()  {
-    return{
+  data() {
+    return {
       songs: [
-            { name: "Song 1", id: 0 },
-            { name: "Song 2", id: 1 },
-            { name: "Song 3", id: 2 },
-            { name: "Song 4", id: 3 }
+        { name: "Song 1", id: 0 },
+        { name: "Song 2", id: 1 },
+        { name: "Song 3", id: 2 },
+        { name: "Song 4", id: 3 }
       ],
       gigs: [
         {
@@ -58,16 +58,16 @@ export default {
           info: ""
         }
       ]
-    }
+    };
   },
   methods: {
-    initStorage: function(){
+    initStorage: function() {
       storage.setGigs(this.gigs);
       storage.setEvents(this.events);
       storage.setSongs(this.songs);
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -91,8 +91,8 @@ export default {
     }
   }
 
-    #initBtn{
-      float: right;
-    }
+  #initBtn {
+    float: right;
+  }
 }
 </style>

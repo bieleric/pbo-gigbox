@@ -22,7 +22,6 @@ import FullCalendar from "vue-full-calendar";
 import Datetime from "vue-datetime";
 import VModal from "vue-js-modal";
 
-
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
