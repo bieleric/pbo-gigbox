@@ -12,6 +12,7 @@
                 @event-selected="handleEventClick"
                 @day-click="handleDateClick"
               />
+
             </b-row>
           </b-col>
           <b-col cols="4" class="containerFiles ">
