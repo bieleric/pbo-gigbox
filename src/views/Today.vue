@@ -1,20 +1,19 @@
 <template>
   <div class="today">
-    <h1>Today</h1>
-    <main class="d-flex p-2 bd-highlight">
-      <section id="notesheet" class="rounded">
+    <div class="main d-flex flex-row p-2 bd-highlight">
+      <section id="notesheet" class="rounded my-0 mx-auto">
         <pdf src="src/assets/AnotherBrickInTheWall.pdf" :page="1">
           <template slot="loading">
             loading content here...
           </template>
         </pdf>
       </section>
-      <section id="organizer" class="rounded">
+      <section id="todaysSongsList" class="rounded my-0 mx-auto">
         <datetime
           id="datepicker"
           class="theme-orange bg-light w-100 rounded-top border"
           v-model="date"
-          title="Dein Autritt"
+          title="Your Appearance"
           placeholder="Choose a date..."
         ></datetime>
         <draggable
@@ -34,7 +33,7 @@
           </div>
         </draggable>
       </section>
-    </main>
+    </div>
   </div>
 </template>
 
@@ -87,31 +86,29 @@ export default {
 </script>
 
 <style lang="scss">
-main {
-  display: flex;
-  flex-direction: row;
-
+.main {
+  /* single Song */
   #songs {
     cursor: pointer;
   }
 
+  /* Notesheet of current song */
   #notesheet {
-    height: 30em;
+    height: 35em;
     width: 45%;
     border: solid 3px grey;
-    margin: 0 auto 0 auto;
     overflow-x: hidden;
     overflow-y: scroll;
   }
 
-  #organizer {
-    height: 30em;
+  /* List of todays songs */
+  #todaysSongsList {
+    height: 35em;
     width: 45%;
     border: solid 3px grey;
-    margin: 0 auto 0 auto;
   }
 
-  // Theme of datepicker
+  /* Theme of datepicker */
   .theme-orange .vdatetime-popup__header,
   .theme-orange .vdatetime-calendar__month__day--selected > span > span,
   .theme-orange .vdatetime-calendar__month__day--selected:hover > span > span {
