@@ -38,8 +38,8 @@
                   @start="drag = true"
                   @end="drag = false"
                 >
-                  <label id="deleteBtn" class="btn addAndDeleteBtn"
-                    ><font-awesome-icon icon="trash-alt" class="icon"
+                  <label id="deleteBtn" class="rounded border border-danger"
+                    ><font-awesome-icon icon="trash-alt" id="deleteIcon"
                   /></label>
                 </draggable>
               </b-col>
@@ -49,8 +49,8 @@
             <draggable
               v-model="list2"
               group="songs"
-              @start="drag = true"
-              @end="drag = false"
+              @start="drag = true; displayTrash();"
+              @end="drag = false; notDisplayTrash();"
             >
               <div
                 id="songs"
@@ -62,8 +62,6 @@
               </div>
             </draggable>
           </b-col>
-
-          <!--<button v-on:click="getSongs">Hier</button>-->
         </b-row>
       </b-container>
     </main>
@@ -153,6 +151,17 @@ export default {
       icon.style = "display: block; border: solid 3px red; padding: 20px;";
 
       label.appendChild(icon);
+    },
+
+    displayTrash: function() {
+      let trashContainer = document.getElementById("deleteBtn");
+      trashContainer.style.visibility = "visible";
+
+    },
+
+    notDisplayTrash: function() {
+      let trashContainer = document.getElementById("deleteBtn");
+      trashContainer.style.visibility = "hidden";
     }
   }
 };
@@ -174,6 +183,19 @@ main {
 
   #deleteBtn {
     margin-top: 50%;
+    background-color: rgba(255, 0, 0, 0.2);
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80%;
+    visibility: hidden;
+  }
+
+  #deleteIcon {
+    font-size: 300%;
+    color: rgba(255, 0, 0, 0.5);
   }
 
   #files {
