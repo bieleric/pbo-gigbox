@@ -1,5 +1,5 @@
 # pbo-gigbox
-<<<<<<< HEAD
+Projekt zur Organisation von Liveauftritten. Das Projekt ermöglicht die Anzeige von selbstständig hochgeladenen Notenblättern und Bearbeitung des Ablaufes des Auftrittes. 
 
 ## Project setup
 ```
