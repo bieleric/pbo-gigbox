@@ -46,7 +46,7 @@ export default {
         {
           id: 0, //Event-ID
           title: "Auftritt",
-          start: "2019-11-22T12:30:00",
+          start: "2019-12-22T12:30:00",
           end: "2019-11-22T14:30:00",
           allDay: false,
           info: "Test-Auftritt 0"
@@ -54,7 +54,7 @@ export default {
         {
           id: 1, //Event-ID
           title: "Auftritt2",
-          start: "2019-12-12T12:30:00",
+          start: "2019-12-23T12:30:00",
           end: "2019-12-12T14:30:00",
           allDay: false,
           info: ""

@@ -2,7 +2,7 @@
   <div class="today">
     <div class="main d-flex flex-row p-2 bd-highlight">
       <section id="notesheet" class="rounded my-0 mx-auto">
-        <pdf src="src\assets\AnotherBrickInTheWall.pdf" :page="1">
+        <pdf :src="pdfdata" :page="1">
           <template slot="loading">
             loading content here...
           </template>
@@ -42,28 +42,35 @@ import { Datetime } from "vue-datetime";
 import draggable from "vuedraggable";
 import pdf from "pdfvuer";
 import * as storage from "../assets/storage.js";
+import pdfjs from "pdfjs-dist";
 
 export default {
   name: "Datepicker",
   components: {
     datetime: Datetime,
     draggable,
-    pdf
+    pdf 
   },
 
   data() {
     return {
       date: "",
       list2: [],
-      path: "src/assets/AnotherBrickInTheWall.pdf"
+      path: "AnotherBrickInTheWall.pdf",
+      pdfdata: pdfjs.getDocument('https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS')
     };
   },
-
   methods: {
-    showPdf: function(key) {
-      let pfad = this.list2[key].path;
-
-      alert(pfad);
+    getPdf () {
+      //self.pdfdata = pdfvuer.createLoadingTask('../assets/AnotherBrickInTheWall.pdf')
+      //self.pdfdata = pdfjs.getDocument("https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS");
+      },
+    showPdf: function() {
+      //let pfad = this.list2[key].path;
+      this.getPdf();
+      console.log(typeof('https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS'));
+      console.log(this.pdfdata);
+      alert(this.path);
     },
 
     /* Date format: yyyy-mm-dd */
