@@ -21,3 +21,17 @@ export function setEvents(songs) {
 export function getEvents() {
   return JSON.parse(localStorage.getItem("events"));
 }
+
+export function removeSong(song) {
+  var storedNames = this.getSongs();
+
+  let i = storedNames.length;
+  while (i-- > 0) {
+    if (storedNames[i].name === song) {
+      //remove item selected, second parameter is the number of items to delete
+      storedNames.splice(i, 1);
+    }
+  }
+  // Put the object into storage
+  this.setSongs(storedNames);
+}
