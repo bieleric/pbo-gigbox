@@ -25,6 +25,7 @@ export default {
       gigs: [
         {
           eID: 0,
+          Date: "2019-12-22",
           Songs: [
             { name: "Song 1", id: 0 },
             { name: "Song 2", id: 1 },
@@ -33,6 +34,7 @@ export default {
         },
         {
           eID: 1,
+          Date: "2019-12-23",
           Songs: [
             { name: "Song 3", id: 0 },
             { name: "Song 1", id: 1 },

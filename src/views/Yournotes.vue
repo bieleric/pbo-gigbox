@@ -62,8 +62,6 @@
               </div>
             </draggable>
           </b-col>
-
-          <!--<button v-on:click="getSongs">Hier</button>-->
         </b-row>
       </b-container>
     </main>
