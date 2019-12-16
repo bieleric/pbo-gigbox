@@ -10,7 +10,12 @@
       >
         {{ element.name }}
         <div>
-          <input type="checkbox" v-model="selectedSongs" :value="element.id" checked/>
+          <input
+            type="checkbox"
+            v-model="selectedSongs"
+            :value="element.id"
+            checked
+          />
         </div>
       </div>
     </b-modal>
@@ -24,21 +29,22 @@ export default {
   data() {
     return {
       songs: Storage.getSongs(),
-      selectedSongs: [],
+      selectedSongs: []
     };
   },
   methods: {
     handleOK: function() {
       let newSongList = [];
-      for(let i=0; i<this.selectedSongs.length; i++){
+      for (let i = 0; i < this.selectedSongs.length; i++) {
         newSongList[i] = this.songs[this.selectedSongs[i]];
       }
-      this.$emit('updateSongList',newSongList);
+      this.$emit("updateSongList", newSongList);
     }
   },
   watch: {
-    currSongList: function(){
-      this.selectedSongs = this.currSongList.map(el => el.id)     }
+    currSongList: function() {
+      this.selectedSongs = this.currSongList.map(el => el.id);
+    }
   }
 };
 </script>

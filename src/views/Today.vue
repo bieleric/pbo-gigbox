@@ -69,16 +69,14 @@ export default {
     /* Date format: yyyy-mm-dd */
     formatDate: function(date) {
       var d = new Date(date),
-          month = '' + (d.getMonth() + 1),
-          day = '' + d.getDate(),
-          year = d.getFullYear();
+        month = "" + (d.getMonth() + 1),
+        day = "" + d.getDate(),
+        year = d.getFullYear();
 
-      if (month.length < 2) 
-          month = '0' + month;
-      if (day.length < 2) 
-          day = '0' + day;
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
 
-      return [year, month, day].join('-');
+      return [year, month, day].join("-");
     }
   },
 
@@ -86,16 +84,12 @@ export default {
     /* If datepicker changes the date -> update view */
     date: function() {
       let tmp = storage.getGigs();
-      for(let i = 0; i < tmp.length; i++) 
-      {
+      for (let i = 0; i < tmp.length; i++) {
         let selectedDate = this.formatDate(this.date);
-        if(tmp[i].Date == selectedDate) 
-        {
+        if (tmp[i].Date == selectedDate) {
           this.list2 = tmp[i].Songs;
           break;
-        } 
-        else 
-        {
+        } else {
           this.list2 = [];
         }
       }

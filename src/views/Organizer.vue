@@ -1,7 +1,7 @@
 <template>
   <div class="organizer">
     <h1>Organizer</h1>
-    <main >
+    <main>
       <b-container fluid>
         <b-row>
           <b-col cols="6" class="containerDates ">
@@ -18,15 +18,13 @@
           <b-col cols="4" class="containerFiles ">
             <b-row class="sheets">
               <b-col>
-                  <div class="w-90 rounded m-2 gig-header">
-                    <p
-                      v-text="currEvent.title"
-                    ></p>
-                    <p
-                      v-if="this.currEvent.info.length > 0"
-                      v-text="currEvent.info"
-                    ></p>
-                  </div>
+                <div class="w-90 rounded m-2 gig-header">
+                  <p v-text="currEvent.title"></p>
+                  <p
+                    v-if="this.currEvent.info.length > 0"
+                    v-text="currEvent.info"
+                  ></p>
+                </div>
                 <draggable
                   v-model="songList"
                   group="people"
@@ -61,8 +59,15 @@
         </b-row>
       </b-container>
     </main>
-    <SongModal :currSongList="songList" v-on:updateSongList="updateSongList"></SongModal>
-    <EventModal :event="currEvent" v-on:updateCurrEvent="updateCurrEvent" v-on:deleteEvent="deleteEvent"></EventModal>
+    <SongModal
+      :currSongList="songList"
+      v-on:updateSongList="updateSongList"
+    ></SongModal>
+    <EventModal
+      :event="currEvent"
+      v-on:updateCurrEvent="updateCurrEvent"
+      v-on:deleteEvent="deleteEvent"
+    ></EventModal>
   </div>
 </template>
 
@@ -103,36 +108,35 @@ export default {
   methods: {
     handleEventClick: function(info) {
       this.eId = info.eId;
-      let idx = storage.getIdxForId(this.gigs,this.eId);
+      let idx = storage.getIdxForId(this.gigs, this.eId);
       this.songList = this.gigs[idx].Songs;
       this.changedeId = !this.changedeId;
-      this.clicks++ 
+      this.clicks++;
       let self = this;
-      if(this.clicks === 1) {
+      if (this.clicks === 1) {
         this.timer = setTimeout(function() {
           self.clicks = 0;
         }, 1000);
-      } else{
-          clearTimeout(this.timer);  
-          this.$bvModal.show("eventModal");
-          this.clicks = 0;
-      }         
+      } else {
+        clearTimeout(this.timer);
+        this.$bvModal.show("eventModal");
+        this.clicks = 0;
+      }
     },
     handleDateClick: function(info) {
       let tmp = this.gigs.filter(el => el.Date == info.toISOString().trim()); //trim notwendig, da sonst compare failed
-      if(tmp.length != 1){
-        let dateStart = info.toISOString() + 'T12:00:00';
-        let dateEnd = info.toISOString() + 'T13:00:00';
+      if (tmp.length != 1) {
+        let dateStart = info.toISOString() + "T12:00:00";
+        let dateEnd = info.toISOString() + "T13:00:00";
         this.currEvent.start = dateStart;
         this.currEvent.end = dateEnd;
-        this.currEvent.title = '';
-        this.currEvent.info = '';
+        this.currEvent.title = "";
+        this.currEvent.info = "";
         this.songList = [];
-        let max = Math.max(...this.gigs.map(el=>el.eId));
+        let max = Math.max(...this.gigs.map(el => el.eId));
         console.log(max);
-        this.currEvent.eId = max+1;
-      }
-      else{
+        this.currEvent.eId = max + 1;
+      } else {
         this.eId = tmp[0].eId;
         this.changedeId = !this.changedeId;
         this.songList = tmp[0].Songs;
@@ -142,50 +146,50 @@ export default {
     modalShow: function() {
       this.$modal.show("SongModal");
     },
-    updateSongList: function(newList){
+    updateSongList: function(newList) {
       this.songList = newList;
-      let idx = storage.getIdxForId(this.gigs,this.eId);
+      let idx = storage.getIdxForId(this.gigs, this.eId);
       this.gigs[idx].Songs = newList;
       this.changedGigs = !this.changedGigs;
       console.log(this.gigs);
     },
-    updateCurrEvent: function(newCurrEvent){
+    updateCurrEvent: function(newCurrEvent) {
       this.currEvent = newCurrEvent;
       this.eId = this.currEvent.eId;
       this.events = storage.getEvents();
       this.gigs = storage.getGigs();
     },
-    deleteEvent: function(){
+    deleteEvent: function() {
       this.gigs = storage.getGigs();
       this.events = storage.getEvents();
       this.changedGigs = !this.changedGigs;
       this.changedEvents = !this.changedEvents;
     },
-    onDragEnd: function(){
+    onDragEnd: function() {
       this.changedSongs = !this.changedSongs;
     }
   },
   watch: {
-    changedGigs: function(){
+    changedGigs: function() {
       storage.setGigs(this.gigs);
     },
-    changedEvents: function(){
+    changedEvents: function() {
       storage.setEvents(this.events);
       let api = this.$refs.calendar.getApi();
       api.refetchEvents();
     },
-    changedSongs: function(){
-      let idx = storage.getIdxForId(this.gigs,this.eId);
+    changedSongs: function() {
+      let idx = storage.getIdxForId(this.gigs, this.eId);
       this.gigs[idx].Songs = this.songList;
       storage.setGigs(this.gigs);
     },
-    changedeId: function(){
-    //  let tmpEvent = storage.getEvents();
-      let idx = storage.getIdxForId(this.events,this.eId);
+    changedeId: function() {
+      //  let tmpEvent = storage.getEvents();
+      let idx = storage.getIdxForId(this.events, this.eId);
       this.currEvent = this.events[idx];
     },
-    changedCurrEvent: function(){
-      let idx = storage.getIdxForId(this.events,this.eId);
+    changedCurrEvent: function() {
+      let idx = storage.getIdxForId(this.events, this.eId);
       this.events[idx] = this.currEvent;
       this.changedEvents = !this.changedEvents;
     }
