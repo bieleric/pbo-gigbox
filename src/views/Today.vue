@@ -2,7 +2,7 @@
   <div class="today">
     <div class="main d-flex flex-row p-2 bd-highlight">
       <section id="notesheet" class="rounded my-0 mx-auto">
-        <pdf src="src\assets\AnotherBrickInTheWall.pdf" :page="1">
+        <pdf src="/assets/AnotherBrickInTheWall.pdf" :page="1">
           <template slot="loading">
             loading content here...
           </template>
