@@ -13,6 +13,7 @@
               id="addBtn"
               style="display: none;"
               v-on:change="updateAddButton"
+              accept=".pdf"
             />
             <div id="saveAndClearWrapper">
               <button
@@ -33,14 +34,20 @@
             <b-row>
               <b-col>
                 <draggable
+                  id="deleteContainer"
                   v-model="list2"
                   group="songs"
                   @start="drag = true"
                   @end="drag = false"
+                  @change="deleteSong()"
+                  class="trashzone"
                 >
-                  <label id="deleteBtn" class="btn addAndDeleteBtn"
-                    ><font-awesome-icon icon="trash-alt" class="icon"
-                  /></label>
+                  <div slot="footer" class="footer">
+                    <label id="deleteBtn" class="rounded border border-danger">
+                      <font-awesome-icon icon="trash-alt" id="deleteIcon"/>
+                      Drop here for deletion
+                    </label>
+                  </div>
                 </draggable>
               </b-col>
             </b-row>
@@ -48,9 +55,11 @@
           <b-col cols="8" id="files">
             <draggable
               v-model="list2"
+              v-bind="dragOptions"
               group="songs"
-              @start="drag = true"
-              @end="drag = false"
+              @start="drag = true; displayTrash();"
+              @end="drag = false; notDisplayTrash();"
+              @change="setID($event)"
             >
               <div
                 id="songs"
@@ -62,8 +71,6 @@
               </div>
             </draggable>
           </b-col>
-
-          <!--<button v-on:click="getSongs">Hier</button>-->
         </b-row>
       </b-container>
     </main>
@@ -72,6 +79,7 @@
 
 <script>
 import draggable from "vuedraggable";
+import * as storage from "../assets/storage.js";
 
 export default {
   name: "Yournotes",
@@ -83,27 +91,29 @@ export default {
   data() {
     return {
       files: [],
-      list2: [
-        {
-          name: "Song 1",
-          id: 0,
-          path: "C:/Users/Eric/Desktop/AnotherBrickInTheWall.pdf"
-        },
-        { name: "Song 2", id: 1 },
-        { name: "Song 3", id: 2 },
-        { name: "Song 4", id: 3 },
-        { name: "Song 5", id: 4 },
-        { name: "Song 6", id: 5 },
-        { name: "Song 7", id: 6 },
-        { name: "Song 8", id: 7 },
-        { name: "Song 9", id: 8 }
-      ]
+      gigs: storage.getGigs(),
+      events: storage.getEvents(),
+      songs: storage.getSongs(),
+      list2: []
     };
   },
 
-  methods: {
-    getSongs: function() {},
+  mounted: function() {
+      this.initLoad();
+  },
 
+  methods: {
+    /* Loads the list from localStorage onLoad */
+    initLoad: function() {
+      console.log("Load Songs");
+      this.list2 = this.songs;
+    },
+
+    setID: function() {
+      alert("Hallo");
+    },
+
+    /* Displays the save- and clear-button */
     updateAddButton: function() {
       let input = document.getElementById("addBtn");
       let label = document.getElementById("labelAddBtn");
@@ -117,24 +127,13 @@ export default {
       saveButton.classList.add("show");
     },
 
+    /* Saves the PDF to localStorage */
     save: function() {
-      // select just .pdf-files
-      /*let label = document.getElementById('labelAddBtn');
-      let format = new RegExp(/[\/\\]([\w\d\s\.\-\(\)]+)$/);
-      let text = label.value.match(format)[1];
-      var sub = text.substring(text.length-4, text.length);
-      if(sub !== ".pdf")
-      {
-          alert("Es werden nur pdf-Dokumente unterstützt.");
-      }*/
-
       let title = document.getElementById("labelAddBtn").innerHTML;
-      alert(title);
-      localStorage.setItem(title, title); //(key, value)
-      let local = localStorage.getItem(title);
-      alert(local);
+      storage.setSongs(title);
     },
 
+    /* Resets the add-button to default */
     clear: function() {
       let input = document.getElementById("addBtn");
       let label = document.getElementById("labelAddBtn");
@@ -153,8 +152,38 @@ export default {
       icon.style = "display: block; border: solid 3px red; padding: 20px;";
 
       label.appendChild(icon);
+    },
+
+    /* Makes waste paper bin visible onDrag */
+    displayTrash: function() {
+      let trashContainer = document.getElementById("deleteBtn");
+      trashContainer.style.visibility = "visible";
+
+    },
+
+    /* Makes waste paper bin invisible onDrop */
+    notDisplayTrash: function() {
+      let trashContainer = document.getElementById("deleteBtn");
+      trashContainer.style.visibility = "hidden";
+    },
+
+    /* Delete song from localstorage after drop */
+    deleteSong: function() {
+      storage.removeSong("Song 3");
+      console.log("Song removed");
     }
-  }
+  },
+
+  computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "songs",
+        disabled: false,
+        ghostClass: "ghost"
+      };
+    }
+  },
 };
 </script>
 
@@ -164,6 +193,7 @@ main {
   display: flex;
   flex-direction: row;
 
+  /* Hand and grab cursor-animation */
   #songs {
     cursor: grab;
   }
@@ -172,10 +202,40 @@ main {
     cursor: grabbing;
   }
 
-  #deleteBtn {
+  /* Deletioncontainer to delete elements onDrop */
+  #deleteContainer {
+    height: 100px;
     margin-top: 50%;
-  }
+    display: block;
 
+    .trashzone .footer {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    #deleteBtn {
+    position: absolute;
+    display: inline-block;
+    background-color: rgba(255, 0, 0, 0.2);
+    width: 83%;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 80%;
+    visibility: hidden;
+    }  
+    #deleteIcon {
+      font-size: 300%;
+      color: rgba(255, 0, 0, 0.5);
+    }
+  }
+  
+  /* Container for songlist */
   #files {
     height: 500px;
     border: solid 3px grey;
