@@ -24,6 +24,7 @@ export default {
       ],
       gigs: [
         {
+
           eID: 0,
           Date: "2019-12-22",
           Songs: [
@@ -33,26 +34,27 @@ export default {
           ]
         },
         {
+
           eID: 1,
           Date: "2019-12-23",
           Songs: [
-            { name: "Song 3", id: 0 },
-            { name: "Song 1", id: 1 },
-            { name: "Song 2", id: 2 }
+            { name: "Song 3", id: 2 },
+            { name: "Song 1", id: 0 },
+            { name: "Song 2", id: 1 }
           ]
         }
       ],
       events: [
         {
-          id: 0, //Event-ID
+          eId: 0, //Event-ID
           title: "Auftritt",
-          start: "2019-11-22T12:30:00",
-          end: "2019-11-22T14:30:00",
+          start: "2019-12-22T12:30:00",
+          end: "2019-12-22T14:30:00",
           allDay: false,
           info: "Test-Auftritt 0"
         },
         {
-          id: 1, //Event-ID
+          eId: 1, //Event-ID
           title: "Auftritt2",
           start: "2019-12-12T12:30:00",
           end: "2019-12-12T14:30:00",

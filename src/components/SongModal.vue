@@ -9,11 +9,8 @@
         :key="element.id"
       >
         {{ element.name }}
-        <div v-if="currSongList.some(e => e.id === element.id)">
-          <input type="checkbox" checked="true" />
-        </div>
-        <div v-else>
-          <input type="checkbox" checked="false" />
+        <div>
+          <input type="checkbox" v-model="selectedSongs" :value="element.id" checked/>
         </div>
       </div>
     </b-modal>
@@ -26,13 +23,22 @@ export default {
   props: ["currSongList"],
   data() {
     return {
-      songs: Storage.getSongs()
+      songs: Storage.getSongs(),
+      selectedSongs: [],
     };
   },
   methods: {
     handleOK: function() {
-      console.log("test");
+      let newSongList = [];
+      for(let i=0; i<this.selectedSongs.length; i++){
+        newSongList[i] = this.songs[this.selectedSongs[i]];
+      }
+      this.$emit('updateSongList',newSongList);
     }
+  },
+  watch: {
+    currSongList: function(){
+      this.selectedSongs = this.currSongList.map(el => el.id)     }
   }
 };
 </script>
