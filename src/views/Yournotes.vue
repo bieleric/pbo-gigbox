@@ -59,7 +59,7 @@
               group="songs"
               @start="drag = true; displayTrash();"
               @end="drag = false; notDisplayTrash();"
-              @change="setID()"
+              @change="setID($event)"
             >
               <div
                 id="songs"
