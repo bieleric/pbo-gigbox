@@ -19,6 +19,7 @@
         ></datetime>
         <draggable
           v-model="list2"
+          v-bind="dragOptions"
           group="people"
           @start="drag = true"
           @end="drag = false"
@@ -57,7 +58,7 @@ export default {
       date: "",
       list2: [
         {
-          name: "Another Brick In The Wall",
+          name: "Song 1",
           id: 0,
           path: "AnotherBrickInTheWall.pdf"
         },
@@ -81,6 +82,17 @@ export default {
       let pfad = this.list2[key].path;
 
       alert(pfad);
+    }
+  },
+
+  computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "songs",
+        disabled: false,
+        ghostClass: "ghost"
+      };
     }
   }
 };
