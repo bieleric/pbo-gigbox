@@ -116,7 +116,7 @@ export default {
     },
 
     setID: function() {
-      alert("Hallo");
+      //alert("Hallo");
     },
 
     /* Displays the save- and clear-button */
