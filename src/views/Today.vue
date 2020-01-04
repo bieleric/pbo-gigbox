@@ -7,6 +7,9 @@
             loading content here...
           </template>
         </pdf>
+      <WebViewer :path="`${publicPath}lib`" url="https://www2.htw-dresden.de/~s77194/PBO/AnotherBrickInTheWall.pdf"/>  
+      <!--<WebViewer :path="'${publicPath}lib'" url = "file://C:/Users/Paul/Documents/Uni/PBO/pbo-gigbox/src/views/AnotherBrickInTheWall.pdf"/> !-->
+      <!--<PDFDocument url="https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS" scale=0.5> </PDFDocument>  !-->
       </section>
       <section id="organizer" class="rounded my-0 mx-auto">
         <datetime
@@ -40,20 +43,26 @@
 <script>
 import { Datetime } from "vue-datetime";
 import draggable from "vuedraggable";
-import pdf from "pdfvuer";
 import * as storage from "../assets/storage.js";
 import pdfjs from "pdfjs-dist";
+import WebViewer from "../components/WebViewer.vue"
+//import PDFDocument from "../components/PDFDocument.vue";
+//import pdf from 'vue-pdf';
 
 export default {
   name: "Datepicker",
   components: {
     datetime: Datetime,
     draggable,
-    pdf 
+    //pdf
+    //PDFDocument
+    WebViewer
   },
 
   data() {
     return {
+      publicPath: process.env.BASE_URL,
+      url: "./assets/AnotherBrickInTheWall.pdf",
       date: "",
       list2: [],
       path: "AnotherBrickInTheWall.pdf",
