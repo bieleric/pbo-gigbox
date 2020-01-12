@@ -48,6 +48,7 @@ export default {
           title: "Auftritt",
           start: "2020-01-22T12:30:00",
           end: "2020-01-22T14:30:00",
+
           allDay: false,
           info: "Test-Auftritt 0"
         },
