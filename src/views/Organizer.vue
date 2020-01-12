@@ -27,9 +27,10 @@
                 </div>
                 <draggable
                   v-model="songList"
-                  group="people"
-                  @start="drag = true"
-                  @end="onDragEnd"
+                  group="songs"
+                  @start="drag = true; trashVisible = true; displayTrash();"
+                  @end="onDragEnd; trashVisible = false; displayTrash();"
+                  :move="setID"
                 >
                   <div
                     class="drag w-90 text-white rounded m-2"
@@ -45,11 +46,18 @@
         </b-row>
         <b-row>
           <b-col offset-md="7" class="containerDeleteBtn">
-            <label id="deleteBtn1" class="btn"
-              ><font-awesome-icon icon="trash-alt" class="icon"
-            /></label>
+                <draggable
+                  id="deleteContainer"
+                  v-model="deleteList"
+                  group="songs"
+                  @start="drag = true"
+                  @end="drag = false"
+                  @change="deleteSong()">
+                    <label id="deleteBtn" class="rounded border btn">
+                      <font-awesome-icon icon="trash-alt" id="deleteIcon" class="icon"/>
+                    </label>
+                </draggable>
           </b-col>
-
           <b-col class="containerAddBtn">
             <label for="addBtn" class="btn" id="addBtnLabel">
               <font-awesome-icon icon="plus" class="icon" />
@@ -82,9 +90,11 @@ export default {
   data() {
     return {
       songList: [],
+      deleteList: [],
       gigs: storage.getGigs(),
       events: storage.getEvents(),
       songs: storage.getSongs(),
+      songId: -1,
       config: {
         defaultView: "month"
       },
@@ -102,7 +112,8 @@ export default {
       changedEvents: false,
       changedSongs: false,
       changedeId: false,
-      changedCurrEvent: false
+      changedCurrEvent: false,
+      trashVisible: false
     };
   },
   methods: {
@@ -167,7 +178,24 @@ export default {
     },
     onDragEnd: function() {
       this.changedSongs = !this.changedSongs;
-    }
+    },
+    displayTrash: function(){
+      let trashContainer = document.getElementById("deleteBtn");
+      if(this.trashVisible == true)
+        trashContainer.style.visibility = "visible";
+      else
+        trashContainer.style.visibility = "hidden";
+    },
+    deleteSong: function(){
+      console.log("Song: "+ this.songId + " removed");
+      storage.removeSong(this.songId);
+      this.changedSongs = !this.changedSongs;
+    },
+    /* Sets id from element onDrag for delete-function */
+    setID: function(e) {
+      this.songId = e.draggedContext.element.name.split(' ')[1];
+      console.log("Current song id:" + this.songId);
+    },
   },
   watch: {
     changedGigs: function() {
@@ -248,7 +276,8 @@ main {
     margin-top: 2em;
   }
 
-  #deleteBtn1 {
+  #deleteBtn {
+    visibility: hidden;
     margin-left: 50%;
   }
   #addBtnLabel {
