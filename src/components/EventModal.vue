@@ -34,7 +34,7 @@ export default {
         let ID = this.event.eId;
         let events = storage.getEvents();
         let gigs = storage.getGigs();
-        if(gigs.indexOf(ID) == -1 ){
+        if(storage.getIdxForId(gigs,ID) == -1){
           events.push(this.event);
           let newGig = {
           eId: ID,
@@ -67,6 +67,7 @@ export default {
       this.$emit('deleteEvent');
     },
     setCurrEventTitle: function(event) {
+      console.log(this.event);
       let tmp = event.target.innerText;
       this.event.title = tmp;
     },
