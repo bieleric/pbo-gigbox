@@ -1,5 +1,7 @@
 <template>
   <div class="yournotes">
+    <div id="infoField">
+    </div>
     <h1>Your Notes</h1>
     <main>
       <b-container>
@@ -57,15 +59,10 @@
               v-model="list2"
               v-bind="dragOptions"
               group="songs"
-              @start="
-                drag = true;
-                displayTrash();
-              "
-              @end="
-                drag = false;
-                notDisplayTrash();
-              "
-              @change="setID($event)"
+              @start="drag = true; displayTrash();"
+              @end="drag = false; notDisplayTrash();"
+              :move="setID"
+
             >
               <div
                 id="songs"
@@ -100,7 +97,8 @@ export default {
       gigs: storage.getGigs(),
       events: storage.getEvents(),
       songs: storage.getSongs(),
-      list2: []
+      list2: [],
+      currentId: "",
     };
   },
 
@@ -109,14 +107,23 @@ export default {
   },
 
   methods: {
+    display: function() {
+      this.list2.sort(this.compareName);
+    },
+
     /* Loads the list from localStorage onLoad */
     initLoad: function() {
       console.log("Load Songs");
       this.list2 = this.songs;
+      this.display();
     },
 
-    setID: function() {
-      //alert("Hallo");
+
+    /* Sets id from element onDrag for delete-function */
+    setID: function(e) {
+      this.currentId = e.draggedContext.element.name;
+      console.log("Current song id:" + this.currentId);
+
     },
 
     /* Displays the save- and clear-button */
@@ -135,8 +142,72 @@ export default {
 
     /* Saves the PDF to localStorage */
     save: function() {
-      let title = document.getElementById("labelAddBtn").innerHTML;
-      storage.setSongs(title);
+      let pdf = document.getElementById("labelAddBtn").innerHTML;
+      /* Delete fileextension */
+      let title = pdf.split('.').slice(0, -1).join('.');
+      let infoField = document.getElementById("infoField");
+      let storedNames = storage.getSongs();
+      let i = storedNames.length;
+
+      for(let j = 0; j < i; j++) {
+        /* Check if this song already exists */
+        if(storedNames[j].name === title)
+        {
+          infoField.style.visibility = "visible";
+          infoField.innerHTML = "Error: Song not uploaded. This song already exists.";
+          break;
+        }
+
+        /* If a gap exists e.g.: id = 0, id = 2 -> id = 1 is missing add the new title with missing id */
+        if (storedNames[j].id != j) {
+          let newSong = { name:title, id:j };
+          storedNames.push(newSong);
+          /* Sort elements for filling the gap */
+          storedNames.sort(this.compareId);
+          console.log(storedNames);
+          infoField.style.visibility = "visible";
+          infoField.innerHTML = "Song successfully uploaded.";
+          break;
+        }
+        else if(j == (i-1)) {
+          let newSong = { name:title, id:(j+1) };
+          storedNames.push(newSong);
+          console.log(storedNames);
+          infoField.style.visibility = "visible";
+          infoField.innerHTML = "Song successfully uploaded.";
+          break;
+        }
+      }
+      storage.setSongs(storedNames);
+      this.clear();
+    },
+
+    /* Compare id's of the stored elements for save-function */
+    compareId: function(a, b) {
+      const idA = a.id;
+      const idB = b.id;
+
+      let comparison = 0;
+      if (idA > idB) {
+        comparison = 1;
+      } else if (idA < idB) {
+        comparison = -1;
+      }
+      return comparison;
+    },
+
+    /* Compare names of the stored elements for display-function */
+    compareName: function(a, b) {
+      const idA = a.name.toUpperCase();
+      const idB = b.name.toUpperCase();
+
+      let comparison = 0;
+      if (idA > idB) {
+        comparison = 1;
+      } else if (idA < idB) {
+        comparison = -1;
+      }
+      return comparison;
     },
 
     /* Resets the add-button to default */
@@ -174,8 +245,8 @@ export default {
 
     /* Delete song from localstorage after drop */
     deleteSong: function() {
-      storage.removeSong("Song 3");
-      console.log("Song removed");
+      storage.removeSong(this.currentId);
+      console.log("Song: "+ this.currentId + " removed");
     }
   },
 
@@ -193,11 +264,23 @@ export default {
 </script>
 
 <style lang="scss">
+
+/* Information on upload */
+#infoField {
+  position: fixed;
+  top: 0;
+  padding: 5px;
+  width: 100%;
+  z-index: 99;
+  background-color:rgba(69, 177, 69, 0.5);
+  visibility: hidden;
+}
+
 main {
   padding-top: 5%;
   display: flex;
   flex-direction: row;
-
+ 
   /* Hand and grab cursor-animation */
   #songs {
     cursor: grab;

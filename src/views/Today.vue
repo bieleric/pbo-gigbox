@@ -18,6 +18,7 @@
         ></datetime>
         <draggable
           v-model="list2"
+          v-bind="dragOptions"
           group="people"
           @start="drag = true"
           @end="drag = false"
@@ -54,7 +55,23 @@ export default {
   data() {
     return {
       date: "",
-      list2: [],
+      list2: [
+        {
+          name: "Song 1",
+          id: 0,
+          path: "AnotherBrickInTheWall.pdf"
+        },
+        {
+          name: "Song 2",
+          id: 1,
+          path: "path/to/song2.pdf"
+        },
+        {
+          name: "Song 3",
+          id: 2,
+          path: "path/to/song3.pdf"
+        }
+      ],
       path: "src/assets/AnotherBrickInTheWall.pdf"
     };
   },
@@ -93,6 +110,17 @@ export default {
           this.list2 = [];
         }
       }
+    }
+  },
+
+  computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "songs",
+        disabled: false,
+        ghostClass: "ghost"
+      };
     }
   }
 };
