@@ -136,6 +136,7 @@ export default {
     cursor: grabbing;
   }
 
+  /* Notesheet of current song */
   #notesheet {
     height: 35em;
     width: 45%;
@@ -150,7 +151,7 @@ export default {
     border: solid 3px grey;
   }
 
-  // Theme of datepicker
+  /* Theme of datepicker */
   .theme-orange .vdatetime-popup__header,
   .theme-orange .vdatetime-calendar__month__day--selected > span > span,
   .theme-orange .vdatetime-calendar__month__day--selected:hover > span > span {
