@@ -2,11 +2,14 @@
   <div class="today">
     <div class="main d-flex flex-row p-2 bd-highlight">
       <section id="notesheet" class="rounded my-0 mx-auto">
-        <pdf src="src\assets\AnotherBrickInTheWall.pdf" :page="1">
+        <pdf src="/assets/AnotherBrickInTheWall.pdf" :page="1">
           <template slot="loading">
             loading content here...
           </template>
         </pdf>
+      <WebViewer :path="`${publicPath}lib`" url="https://www2.htw-dresden.de/~s77194/PBO/AnotherBrickInTheWall.pdf"/>  
+      <!--<WebViewer :path="'${publicPath}lib'" url = "file://C:/Users/Paul/Documents/Uni/PBO/pbo-gigbox/src/views/AnotherBrickInTheWall.pdf"/> !-->
+      <!--<PDFDocument url="https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS" scale=0.5> </PDFDocument>  !-->
       </section>
       <section id="organizer" class="rounded my-0 mx-auto">
         <datetime
@@ -18,6 +21,7 @@
         ></datetime>
         <draggable
           v-model="list2"
+          v-bind="dragOptions"
           group="people"
           @start="drag = true"
           @end="drag = false"
@@ -40,45 +44,56 @@
 <script>
 import { Datetime } from "vue-datetime";
 import draggable from "vuedraggable";
-import pdf from "pdfvuer";
 import * as storage from "../assets/storage.js";
+import pdfjs from "pdfjs-dist";
+import WebViewer from "../components/WebViewer.vue"
+//import PDFDocument from "../components/PDFDocument.vue";
+//import pdf from 'vue-pdf';
 
 export default {
   name: "Datepicker",
   components: {
     datetime: Datetime,
     draggable,
-    pdf
+    //pdf
+    //PDFDocument
+    WebViewer
   },
 
   data() {
     return {
+      publicPath: process.env.BASE_URL,
+      url: "./assets/AnotherBrickInTheWall.pdf",
       date: "",
       list2: [],
-      path: "src/assets/AnotherBrickInTheWall.pdf"
+      path: "AnotherBrickInTheWall.pdf",
+      pdfdata: pdfjs.getDocument('https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS')
     };
   },
-
   methods: {
-    showPdf: function(key) {
-      let pfad = this.list2[key].path;
-
-      alert(pfad);
+    getPdf () {
+      //self.pdfdata = pdfvuer.createLoadingTask('../assets/AnotherBrickInTheWall.pdf')
+      //self.pdfdata = pdfjs.getDocument("https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS");
+      },
+    showPdf: function() {
+      //let pfad = this.list2[key].path;
+      this.getPdf();
+      console.log(typeof('https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS'));
+      console.log(this.pdfdata);
+      alert(this.path);
     },
 
     /* Date format: yyyy-mm-dd */
     formatDate: function(date) {
       var d = new Date(date),
-          month = '' + (d.getMonth() + 1),
-          day = '' + d.getDate(),
-          year = d.getFullYear();
+        month = "" + (d.getMonth() + 1),
+        day = "" + d.getDate(),
+        year = d.getFullYear();
 
-      if (month.length < 2) 
-          month = '0' + month;
-      if (day.length < 2) 
-          day = '0' + day;
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
 
-      return [year, month, day].join('-');
+      return [year, month, day].join("-");
     }
   },
 
@@ -86,19 +101,26 @@ export default {
     /* If datepicker changes the date -> update view */
     date: function() {
       let tmp = storage.getGigs();
-      for(let i = 0; i < tmp.length; i++) 
-      {
+      for (let i = 0; i < tmp.length; i++) {
         let selectedDate = this.formatDate(this.date);
-        if(tmp[i].Date == selectedDate) 
-        {
+        if (tmp[i].Date == selectedDate) {
           this.list2 = tmp[i].Songs;
           break;
-        } 
-        else 
-        {
+        } else {
           this.list2 = [];
         }
       }
+    }
+  },
+
+  computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "songs",
+        disabled: false,
+        ghostClass: "ghost"
+      };
     }
   }
 };
