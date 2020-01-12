@@ -7,6 +7,7 @@
           <b-col cols="6" class="containerDates ">
             <b-row class="calendar">
               <full-calendar
+                ref="calendar"
                 :config="config"
                 :events="events"
                 @event-selected="handleEventClick"
@@ -17,27 +18,19 @@
           <b-col cols="4" class="containerFiles ">
             <b-row class="sheets">
               <b-col>
+                <div class="w-90 rounded m-2 gig-header">
+                  <p v-text="currEvent.title"></p>
+                  <p
+                    v-if="this.currEvent.info.length > 0"
+                    v-text="currEvent.info"
+                  ></p>
+                </div>
                 <draggable
                   v-model="songList"
                   group="people"
                   @start="drag = true"
-                  @end="drag = false"
+                  @end="onDragEnd"
                 >
-                  <div class="w-90 rounded m-2 gig-header">
-                    <p
-                      contenteditable
-                      v-text="currEvent.title"
-                      @blur="setCurrEventTitle"
-                      @keydown.enter="setCurrEventTitleEnd"
-                    ></p>
-                    <p
-                      contenteditable
-                      v-if="this.currEvent.info.length > 0"
-                      v-text="currEvent.info"
-                      @blur="setCurrEventInfo"
-                      @keydown.enter="setCurrEventInfoEnd"
-                    ></p>
-                  </div>
                   <div
                     class="drag w-90 text-white rounded m-2"
                     v-for="element in songList"
@@ -66,8 +59,15 @@
         </b-row>
       </b-container>
     </main>
-    <SongModal :currSongList="songList"></SongModal>
-    <EventModal :event="currEvent"></EventModal>
+    <SongModal
+      :currSongList="songList"
+      v-on:updateSongList="updateSongList"
+    ></SongModal>
+    <EventModal
+      :event="currEvent"
+      v-on:updateCurrEvent="updateCurrEvent"
+      v-on:deleteEvent="deleteEvent"
+    ></EventModal>
   </div>
 </template>
 
@@ -84,70 +84,114 @@ export default {
       songList: [],
       gigs: storage.getGigs(),
       events: storage.getEvents(),
+      songs: storage.getSongs(),
       config: {
         defaultView: "month"
       },
-      eID: -1,
+      eId: -1,
       currEvent: {
+        eId: -1,
         title: "",
         start: "",
         end: "",
         allDay: false,
         info: ""
-      }
+      },
+      clicks: 0,
+      changedGigs: false,
+      changedEvents: false,
+      changedSongs: false,
+      changedeId: false,
+      changedCurrEvent: false
     };
   },
   methods: {
     handleEventClick: function(info) {
-      this.eID = info.id;
-      let tmp = storage.getGigs();
-      this.songList = tmp[this.eID].Songs;
+      this.eId = info.eId;
+      let idx = storage.getIdxForId(this.gigs, this.eId);
+      this.songList = this.gigs[idx].Songs;
+      this.changedeId = !this.changedeId;
+      this.clicks++;
+      let self = this;
+      if (this.clicks === 1) {
+        this.timer = setTimeout(function() {
+          self.clicks = 0;
+        }, 1000);
+      } else {
+        clearTimeout(this.timer);
+        this.$bvModal.show("eventModal");
+        this.clicks = 0;
+      }
     },
     handleDateClick: function(info) {
-      console.log(info);
+      let tmp = this.gigs.filter(el => el.Date == info.toISOString().trim()); //trim notwendig, da sonst compare failed
+      if (tmp.length != 1) {
+        let dateStart = info.toISOString() + "T12:00:00";
+        let dateEnd = info.toISOString() + "T13:00:00";
+        this.currEvent.start = dateStart;
+        this.currEvent.end = dateEnd;
+        this.currEvent.title = "";
+        this.currEvent.info = "";
+        this.songList = [];
+        let max = Math.max(...this.gigs.map(el => el.eId));
+        console.log(max);
+        this.currEvent.eId = max + 1;
+      } else {
+        this.eId = tmp[0].eId;
+        this.changedeId = !this.changedeId;
+        this.songList = tmp[0].Songs;
+      }
       this.$bvModal.show("eventModal");
-    },
-    setCurrEventTitle: function(event) {
-      let tmp = event.target.innerText;
-      this.currEvent.title = tmp;
-    },
-
-    setCurrEventTitleEnd: function(event) {
-      event.target.blur();
-    },
-    setCurrEventInfo: function(event) {
-      let tmp = event.target.innerText;
-      this.currEvent.info = tmp;
-      this.events[this.eID].info = tmp;
-      console.log(this.currEvent);
-    },
-
-    setCurrEventInfoEnd: function(event) {
-      event.target.blur();
     },
     modalShow: function() {
       this.$modal.show("SongModal");
+    },
+    updateSongList: function(newList) {
+      this.songList = newList;
+      let idx = storage.getIdxForId(this.gigs, this.eId);
+      this.gigs[idx].Songs = newList;
+      this.changedGigs = !this.changedGigs;
+      console.log(this.gigs);
+    },
+    updateCurrEvent: function(newCurrEvent) {
+      this.currEvent = newCurrEvent;
+      this.eId = this.currEvent.eId;
+      this.events = storage.getEvents();
+      this.gigs = storage.getGigs();
+    },
+    deleteEvent: function() {
+      this.gigs = storage.getGigs();
+      this.events = storage.getEvents();
+      this.changedGigs = !this.changedGigs;
+      this.changedEvents = !this.changedEvents;
+    },
+    onDragEnd: function() {
+      this.changedSongs = !this.changedSongs;
     }
   },
   watch: {
-    gigs: function() {
+    changedGigs: function() {
       storage.setGigs(this.gigs);
     },
-    events: function() {
+    changedEvents: function() {
       storage.setEvents(this.events);
-      console.log(storage.getEvents());
+      let api = this.$refs.calendar.getApi();
+      api.refetchEvents();
     },
-    songs: function() {
-      storage.setSongs(this.songs);
+    changedSongs: function() {
+      let idx = storage.getIdxForId(this.gigs, this.eId);
+      this.gigs[idx].Songs = this.songList;
+      storage.setGigs(this.gigs);
     },
-    eID: function() {
-      let tmpEvent = storage.getEvents();
-      this.currEvent = tmpEvent[this.eID];
+    changedeId: function() {
+      //  let tmpEvent = storage.getEvents();
+      let idx = storage.getIdxForId(this.events, this.eId);
+      this.currEvent = this.events[idx];
     },
-    currEvent: function() {
-      this.events[this.eID] = this.currEvent;
-      console.log(this.events);
-      storage.setEvents(this.events);
+    changedCurrEvent: function() {
+      let idx = storage.getIdxForId(this.events, this.eId);
+      this.events[idx] = this.currEvent;
+      this.changedEvents = !this.changedEvents;
     }
   }
 };
@@ -181,22 +225,6 @@ main {
     background-color: white;
   }
 
-  .theme-orange .vdatetime-popup__header,
-  .theme-orange .vdatetime-calendar__month__day--selected > span > span,
-  .theme-orange .vdatetime-calendar__month__day--selected:hover > span > span {
-    background: #42b983;
-  }
-  .theme-orange .vdatetime-year-picker__item--selected,
-  .theme-orange .vdatetime-time-picker__item--selected,
-  .theme-orange .vdatetime-popup__actions__button {
-    color: #42b983;
-  }
-  .theme-orange input {
-    width: 100%;
-    cursor: pointer;
-    border: none;
-    border-bottom: solid 3px grey;
-  }
   .drag {
     cursor: move;
     height: 40px;

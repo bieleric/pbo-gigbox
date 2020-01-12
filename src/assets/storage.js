@@ -22,6 +22,11 @@ export function getEvents() {
   return JSON.parse(localStorage.getItem("events"));
 }
 
+export function getIdxForId(arr, id) {
+  let tmp = arr.map(el => el.eId);
+  return tmp.indexOf(id);
+}
+
 export function removeSong(song) {
   var storedNames = this.getSongs();
 

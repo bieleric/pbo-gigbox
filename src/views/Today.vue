@@ -1,20 +1,19 @@
 <template>
   <div class="today">
-    <h1>Today</h1>
-    <main class="d-flex p-2 bd-highlight">
-      <section id="notesheet" class="rounded">
-        <pdf src="src/assets/AnotherBrickInTheWall.pdf" :page="1">
+    <div class="main d-flex flex-row p-2 bd-highlight">
+      <section id="notesheet" class="rounded my-0 mx-auto">
+        <pdf src="/assets/AnotherBrickInTheWall.pdf" :page="1">
           <template slot="loading">
             loading content here...
           </template>
         </pdf>
       </section>
-      <section id="organizer" class="rounded">
+      <section id="organizer" class="rounded my-0 mx-auto">
         <datetime
           id="datepicker"
           class="theme-orange bg-light w-100 rounded-top border"
           v-model="date"
-          title="Dein Autritt"
+          title="Your Appearence"
           placeholder="Choose a date..."
         ></datetime>
         <draggable
@@ -35,7 +34,7 @@
           </div>
         </draggable>
       </section>
-    </main>
+    </div>
   </div>
 </template>
 
@@ -43,7 +42,7 @@
 import { Datetime } from "vue-datetime";
 import draggable from "vuedraggable";
 import pdf from "pdfvuer";
-//import * as storage from "../assets/storage.js";
+import * as storage from "../assets/storage.js";
 
 export default {
   name: "Datepicker",
@@ -82,6 +81,35 @@ export default {
       let pfad = this.list2[key].path;
 
       alert(pfad);
+    },
+
+    /* Date format: yyyy-mm-dd */
+    formatDate: function(date) {
+      var d = new Date(date),
+        month = "" + (d.getMonth() + 1),
+        day = "" + d.getDate(),
+        year = d.getFullYear();
+
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+
+      return [year, month, day].join("-");
+    }
+  },
+
+  watch: {
+    /* If datepicker changes the date -> update view */
+    date: function() {
+      let tmp = storage.getGigs();
+      for (let i = 0; i < tmp.length; i++) {
+        let selectedDate = this.formatDate(this.date);
+        if (tmp[i].Date == selectedDate) {
+          this.list2 = tmp[i].Songs;
+          break;
+        } else {
+          this.list2 = [];
+        }
+      }
     }
   },
 
@@ -99,28 +127,27 @@ export default {
 </script>
 
 <style lang="scss">
-main {
-  display: flex;
-  flex-direction: row;
-
+.main {
   #songs {
-    cursor: pointer;
+    cursor: grab;
+  }
+
+  #songs:active {
+    cursor: grabbing;
   }
 
   #notesheet {
-    height: 30em;
+    height: 35em;
     width: 45%;
     border: solid 3px grey;
-    margin: 0 auto 0 auto;
     overflow-x: hidden;
     overflow-y: scroll;
   }
 
   #organizer {
-    height: 30em;
+    height: 35em;
     width: 45%;
     border: solid 3px grey;
-    margin: 0 auto 0 auto;
   }
 
   // Theme of datepicker

@@ -46,7 +46,7 @@
                 >
                   <div slot="footer" class="footer">
                     <label id="deleteBtn" class="rounded border border-danger">
-                      <font-awesome-icon icon="trash-alt" id="deleteIcon"/>
+                      <font-awesome-icon icon="trash-alt" id="deleteIcon" />
                       Drop here for deletion
                     </label>
                   </div>
@@ -62,6 +62,7 @@
               @start="drag = true; displayTrash();"
               @end="drag = false; notDisplayTrash();"
               :move="setID"
+
             >
               <div
                 id="songs"
@@ -102,7 +103,7 @@ export default {
   },
 
   mounted: function() {
-      this.initLoad();
+    this.initLoad();
   },
 
   methods: {
@@ -117,10 +118,12 @@ export default {
       this.display();
     },
 
+
     /* Sets id from element onDrag for delete-function */
     setID: function(e) {
       this.currentId = e.draggedContext.element.name;
       console.log("Current song id:" + this.currentId);
+
     },
 
     /* Displays the save- and clear-button */
@@ -232,7 +235,6 @@ export default {
     displayTrash: function() {
       let trashContainer = document.getElementById("deleteBtn");
       trashContainer.style.visibility = "visible";
-
     },
 
     /* Makes waste paper bin invisible onDrop */
@@ -303,24 +305,24 @@ main {
       left: 0;
     }
     #deleteBtn {
-    position: absolute;
-    display: inline-block;
-    background-color: rgba(255, 0, 0, 0.2);
-    width: 83%;
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 80%;
-    visibility: hidden;
-    }  
+      position: absolute;
+      display: inline-block;
+      background-color: rgba(255, 0, 0, 0.2);
+      width: 83%;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 80%;
+      visibility: hidden;
+    }
     #deleteIcon {
       font-size: 300%;
       color: rgba(255, 0, 0, 0.5);
     }
   }
-  
+
   /* Container for songlist */
   #files {
     height: 500px;
