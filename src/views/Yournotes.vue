@@ -7,6 +7,7 @@
       <b-container>
         <b-row class="mb-5">
           <b-col class="mb-5" cols="2">
+            <!-- Save and Clear Buttons -->
             <label id="labelAddBtn" for="addBtn" class="btn addAndDeleteBtn"
               ><font-awesome-icon icon="plus" class="icon"
             /></label>
@@ -33,6 +34,7 @@
                 Clear
               </button>
             </div>
+            <!-- Deletionfield -->
             <b-row>
               <b-col>
                 <draggable
@@ -54,6 +56,7 @@
               </b-col>
             </b-row>
           </b-col>
+          <!-- Songlist -->
           <b-col cols="8" id="files">
             <draggable
               v-model="list2"
@@ -117,7 +120,6 @@ export default {
       this.list2 = this.songs;
       this.display();
     },
-
 
     /* Sets id from element onDrag for delete-function */
     setID: function(e) {
@@ -250,6 +252,7 @@ export default {
     }
   },
 
+  /* Switchanimation of dragged elements */
   computed: {
     dragOptions() {
       return {

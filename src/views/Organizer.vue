@@ -4,6 +4,7 @@
     <main>
       <b-container fluid>
         <b-row>
+          <!-- Datepicker -->
           <b-col cols="6" class="containerDates ">
             <b-row class="calendar">
               <full-calendar
@@ -15,6 +16,7 @@
               />
             </b-row>
           </b-col>
+          <!-- Songlist -->
           <b-col cols="4" class="containerFiles">
             <b-row class="sheets">
               <b-col>
@@ -46,6 +48,7 @@
           </b-col>
         </b-row>
         <b-row>
+          <!-- Delete-Button -->
           <b-col offset-md="7" class="containerDeleteBtn">
                 <draggable
                   id="deleteContainer"
@@ -63,6 +66,7 @@
                   </div>
                 </draggable>
           </b-col>
+          <!-- Add-Button -->
           <b-col class="containerAddBtn">
             <label for="addBtn" class="btn" id="addBtnLabel">
               <font-awesome-icon icon="plus" class="icon" />
@@ -72,6 +76,7 @@
         </b-row>
       </b-container>
     </main>
+    <!-- Modals -->
     <SongModal
       :currSongList="songList"
       v-on:updateSongList="updateSongList"
@@ -122,6 +127,7 @@ export default {
     };
   },
   methods: {
+    /* Handles single and doubleclicks for events */
     handleEventClick: function(info) {
       this.eId = info.eId;
       let idx = storage.getIdxForId(this.gigs, this.eId);
@@ -159,9 +165,13 @@ export default {
       }
       this.$bvModal.show("eventModal");
     },
+
+    /* Displays modal */
     modalShow: function() {
       this.$modal.show("SongModal");
     },
+
+    /* Update songlist */
     updateSongList: function(newList) {
       this.songList = newList;
       let idx = storage.getIdxForId(this.gigs, this.eId);
@@ -169,21 +179,29 @@ export default {
       this.changedGigs = !this.changedGigs;
       console.log(this.gigs);
     },
+
+    /* Update the current event */
     updateCurrEvent: function(newCurrEvent) {
       this.currEvent = newCurrEvent;
       this.eId = this.currEvent.eId;
       this.events = storage.getEvents();
       this.gigs = storage.getGigs();
     },
+
+    /* Deletes a gig */
     deleteEvent: function() {
       this.gigs = storage.getGigs();
       this.events = storage.getEvents();
       this.changedGigs = !this.changedGigs;
       this.changedEvents = !this.changedEvents;
     },
+
+    /* Toggles changedSongs */
     onDragEnd: function() {
       this.changedSongs = !this.changedSongs;
     },
+
+    /* Displays trashbucket */
     displayTrash: function(){
       let trashContainer = document.getElementById("deleteBtn");
       if(this.trashVisible == true)
@@ -191,11 +209,14 @@ export default {
       else
         trashContainer.style.visibility = "hidden";
     },
+
+    /* Delete song from localstorage after drop */
     deleteSong: function(){
       console.log("Song: "+ this.songId + " removed");
       storage.removeSong(this.songId);
       this.changedSongs = !this.changedSongs;
     },
+
     /* Sets id from element onDrag for delete-function */
     setID: function(e) {
       this.songId = e.draggedContext.element.name.split(' ')[1];
@@ -229,6 +250,7 @@ export default {
   },
 
   computed: {
+    /* Switchanimation of dragged elements */
     dragOptions() {
       return {
         animation: 200,
@@ -269,6 +291,7 @@ main {
     background-color: white;
   }
 
+  /* Hand and grab cursor-animation and style of single songs */
   .drag {
     cursor: grab;
     height: 40px;
@@ -317,7 +340,6 @@ main {
       width: 80%;
       height: 50px;
       display: flex;
-      //flex-direction: column;
       align-items: center;
       justify-content: center;
       font-size: 80%;
@@ -329,6 +351,7 @@ main {
     }
   }
 
+  /* Add-Button for adding a song to an event */
   #addBtnLabel {
     margin: -20% 0%;
     width: 80%;
