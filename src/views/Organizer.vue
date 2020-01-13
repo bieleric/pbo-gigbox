@@ -15,7 +15,7 @@
               />
             </b-row>
           </b-col>
-          <b-col cols="4" class="containerFiles ">
+          <b-col cols="4" class="containerFiles">
             <b-row class="sheets">
               <b-col>
                 <div class="w-90 rounded m-2 gig-header">
@@ -27,6 +27,7 @@
                 </div>
                 <draggable
                   v-model="songList"
+                  v-bind="dragOptions"
                   group="songs"
                   @start="drag = true; trashVisible = true; displayTrash();"
                   @end="onDragEnd; trashVisible = false; displayTrash();"
@@ -52,10 +53,14 @@
                   group="songs"
                   @start="drag = true"
                   @end="drag = false"
-                  @change="deleteSong()">
-                    <label id="deleteBtn" class="rounded border btn">
-                      <font-awesome-icon icon="trash-alt" id="deleteIcon" class="icon"/>
+                  @change="deleteSong()"
+                  >
+                  <div slot="footer" class="footer">
+                    <label id="deleteBtn" class="rounded border border-danger">
+                      <font-awesome-icon icon="trash-alt" id="deleteIcon" />
+                      
                     </label>
+                  </div>
                 </draggable>
           </b-col>
           <b-col class="containerAddBtn">
@@ -221,6 +226,17 @@ export default {
       this.events[idx] = this.currEvent;
       this.changedEvents = !this.changedEvents;
     }
+  },
+
+  computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "songs",
+        disabled: false,
+        ghostClass: "ghost"
+      };
+    }
   }
 };
 </script>
@@ -239,7 +255,7 @@ main {
   .containerFiles {
     border: solid 3px grey;
     border-radius: 10px;
-    margin: 0 auto 0 auto;
+    margin: 0 auto 5% auto;
   }
 
   .calendar {
@@ -254,10 +270,14 @@ main {
   }
 
   .drag {
-    cursor: move;
+    cursor: grab;
     height: 40px;
     vertical-align: middle;
     background-color: #42b983;
+  }
+
+  .drag:active {
+    cursor: grabbing;
   }
 
   .icon {
@@ -275,13 +295,44 @@ main {
     justify-content: center;
     margin-top: 2em;
   }
+  
+  /* Deletioncontainer to delete elements onDrop */
+  #deleteContainer {
+    height: 25px;
+    margin: -20% 20%;
+    display: block;
 
-  #deleteBtn {
-    visibility: hidden;
-    margin-left: 50%;
+    .trashzone .footer {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    #deleteBtn {
+      position: absolute;
+      display: inline-block;
+      background-color: rgba(255, 0, 0, 0.2);
+      width: 80%;
+      height: 50px;
+      display: flex;
+      //flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 80%;
+      visibility: hidden;
+    }
+    #deleteIcon {
+      font-size: 300%;
+      color: rgba(255, 0, 0, 0.5);
+    }
   }
+
   #addBtnLabel {
-    margin-left: 25%;
+    margin: -20% 0%;
+    width: 80%;
+    height: 50px;
   }
 }
 </style>
