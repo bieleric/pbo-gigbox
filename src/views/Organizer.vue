@@ -28,8 +28,16 @@
                 <draggable
                   v-model="songList"
                   group="songs"
-                  @start="drag = true; trashVisible = true; displayTrash();"
-                  @end="onDragEnd; trashVisible = false; displayTrash();"
+                  @start="
+                    drag = true;
+                    trashVisible = true;
+                    displayTrash();
+                  "
+                  @end="
+                    onDragEnd;
+                    trashVisible = false;
+                    displayTrash();
+                  "
                   :move="setID"
                 >
                   <div
@@ -46,17 +54,22 @@
         </b-row>
         <b-row>
           <b-col offset-md="7" class="containerDeleteBtn">
-                <draggable
-                  id="deleteContainer"
-                  v-model="deleteList"
-                  group="songs"
-                  @start="drag = true"
-                  @end="drag = false"
-                  @change="deleteSong()">
-                    <label id="deleteBtn" class="rounded border btn">
-                      <font-awesome-icon icon="trash-alt" id="deleteIcon" class="icon"/>
-                    </label>
-                </draggable>
+            <draggable
+              id="deleteContainer"
+              v-model="deleteList"
+              group="songs"
+              @start="drag = true"
+              @end="drag = false"
+              @change="deleteSong()"
+            >
+              <label id="deleteBtn" class="rounded border btn">
+                <font-awesome-icon
+                  icon="trash-alt"
+                  id="deleteIcon"
+                  class="icon"
+                />
+              </label>
+            </draggable>
           </b-col>
           <b-col class="containerAddBtn">
             <label for="addBtn" class="btn" id="addBtnLabel">
@@ -162,7 +175,6 @@ export default {
       let idx = storage.getIdxForId(this.gigs, this.eId);
       this.gigs[idx].Songs = newList;
       this.changedGigs = !this.changedGigs;
-      console.log(this.gigs);
     },
     updateCurrEvent: function(newCurrEvent) {
       this.currEvent = newCurrEvent;
@@ -179,23 +191,22 @@ export default {
     onDragEnd: function() {
       this.changedSongs = !this.changedSongs;
     },
-    displayTrash: function(){
+    displayTrash: function() {
       let trashContainer = document.getElementById("deleteBtn");
-      if(this.trashVisible == true)
+      if (this.trashVisible == true)
         trashContainer.style.visibility = "visible";
-      else
-        trashContainer.style.visibility = "hidden";
+      else trashContainer.style.visibility = "hidden";
     },
-    deleteSong: function(){
-      console.log("Song: "+ this.songId + " removed");
+    deleteSong: function() {
+      console.log("Song: " + this.songId + " removed");
       storage.removeSong(this.songId);
       this.changedSongs = !this.changedSongs;
     },
     /* Sets id from element onDrag for delete-function */
     setID: function(e) {
-      this.songId = e.draggedContext.element.name.split(' ')[1];
+      this.songId = e.draggedContext.element.name.split(" ")[1];
       console.log("Current song id:" + this.songId);
-    },
+    }
   },
   watch: {
     changedGigs: function() {

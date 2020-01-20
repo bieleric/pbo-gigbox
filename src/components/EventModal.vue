@@ -68,7 +68,7 @@ export default {
         let ID = this.event.eId;
         let events = storage.getEvents();
         let gigs = storage.getGigs();
-        if(storage.getIdxForId(gigs,ID) == -1){
+        if (storage.getIdxForId(gigs, ID) == -1) {
           events.push(this.event);
           let newGig = {
             eId: ID,

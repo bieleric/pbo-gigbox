@@ -1,7 +1,6 @@
 <template>
   <div class="yournotes">
-    <div id="infoField">
-    </div>
+    <div id="infoField"></div>
     <h1>Your Notes</h1>
     <main>
       <b-container>
@@ -59,10 +58,15 @@
               v-model="list2"
               v-bind="dragOptions"
               group="songs"
-              @start="drag = true; displayTrash();"
-              @end="drag = false; notDisplayTrash();"
+              @start="
+                drag = true;
+                displayTrash();
+              "
+              @end="
+                drag = false;
+                notDisplayTrash();
+              "
               :move="setID"
-
             >
               <div
                 id="songs"
@@ -98,7 +102,7 @@ export default {
       events: storage.getEvents(),
       songs: storage.getSongs(),
       list2: [],
-      currentId: "",
+      currentId: ""
     };
   },
 
@@ -118,12 +122,10 @@ export default {
       this.display();
     },
 
-
     /* Sets id from element onDrag for delete-function */
     setID: function(e) {
       this.currentId = e.draggedContext.element.name;
       console.log("Current song id:" + this.currentId);
-
     },
 
     /* Displays the save- and clear-button */
@@ -144,23 +146,26 @@ export default {
     save: function() {
       let pdf = document.getElementById("labelAddBtn").innerHTML;
       /* Delete fileextension */
-      let title = pdf.split('.').slice(0, -1).join('.');
+      let title = pdf
+        .split(".")
+        .slice(0, -1)
+        .join(".");
       let infoField = document.getElementById("infoField");
       let storedNames = storage.getSongs();
       let i = storedNames.length;
 
-      for(let j = 0; j < i; j++) {
+      for (let j = 0; j < i; j++) {
         /* Check if this song already exists */
-        if(storedNames[j].name === title)
-        {
+        if (storedNames[j].name === title) {
           infoField.style.visibility = "visible";
-          infoField.innerHTML = "Error: Song not uploaded. This song already exists.";
+          infoField.innerHTML =
+            "Error: Song not uploaded. This song already exists.";
           break;
         }
 
         /* If a gap exists e.g.: id = 0, id = 2 -> id = 1 is missing add the new title with missing id */
         if (storedNames[j].id != j) {
-          let newSong = { name:title, id:j };
+          let newSong = { name: title, id: j };
           storedNames.push(newSong);
           /* Sort elements for filling the gap */
           storedNames.sort(this.compareId);
@@ -168,9 +173,8 @@ export default {
           infoField.style.visibility = "visible";
           infoField.innerHTML = "Song successfully uploaded.";
           break;
-        }
-        else if(j == (i-1)) {
-          let newSong = { name:title, id:(j+1) };
+        } else if (j == i - 1) {
+          let newSong = { name: title, id: j + 1 };
           storedNames.push(newSong);
           console.log(storedNames);
           infoField.style.visibility = "visible";
@@ -246,7 +250,7 @@ export default {
     /* Delete song from localstorage after drop */
     deleteSong: function() {
       storage.removeSong(this.currentId);
-      console.log("Song: "+ this.currentId + " removed");
+      console.log("Song: " + this.currentId + " removed");
     }
   },
 
@@ -264,7 +268,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 /* Information on upload */
 #infoField {
   position: fixed;
@@ -272,7 +275,7 @@ export default {
   padding: 5px;
   width: 100%;
   z-index: 99;
-  background-color:rgba(69, 177, 69, 0.5);
+  background-color: rgba(69, 177, 69, 0.5);
   visibility: hidden;
 }
 
@@ -280,7 +283,7 @@ main {
   padding-top: 5%;
   display: flex;
   flex-direction: row;
- 
+
   /* Hand and grab cursor-animation */
   #songs {
     cursor: grab;

@@ -17,8 +17,17 @@ export default {
   data() {
     return {
       songs: [
-        { name: "Song 1", id: 0 },
-        { name: "Song 2", id: 1 },
+        {
+          name: "Another Brick In The Wall",
+          id: 0,
+          url:
+            "https://www2.htw-dresden.de/~s77194/PBO/AnotherBrickInTheWall.pdf"
+        },
+        {
+          name: "Sweet Home Alabama",
+          id: 1,
+          url: "https://www2.htw-dresden.de/~s77194/PBO/SweetHomeAlabama.pdf"
+        },
         { name: "Song 3", id: 2 },
         { name: "Song 4", id: 3 }
       ],
@@ -27,8 +36,18 @@ export default {
           eId: 0,
           Date: "2020-01-22",
           Songs: [
-            { name: "Song 1", id: 0 },
-            { name: "Song 2", id: 1 },
+            {
+              name: "Another Brick In The Wall",
+              id: 0,
+              url:
+                "https://www2.htw-dresden.de/~s77194/PBO/AnotherBrickInTheWall.pdf"
+            },
+            {
+              name: "Sweet Home Alabama",
+              id: 1,
+              url:
+                "https://www2.htw-dresden.de/~s77194/PBO/SweetHomeAlabama.pdf"
+            },
             { name: "Song 3", id: 2 }
           ]
         },
@@ -37,8 +56,18 @@ export default {
           Date: "2020-01-23",
           Songs: [
             { name: "Song 3", id: 2 },
-            { name: "Song 1", id: 0 },
-            { name: "Song 2", id: 1 }
+            {
+              name: "Another Brick In The Wall",
+              id: 0,
+              url:
+                "https://www2.htw-dresden.de/~s77194/PBO/AnotherBrickInTheWall.pdf"
+            },
+            {
+              name: "Sweet Home Alabama",
+              id: 1,
+              url:
+                "https://www2.htw-dresden.de/~s77194/PBO/SweetHomeAlabama.pdf"
+            }
           ]
         }
       ],

@@ -2,14 +2,8 @@
   <div class="today">
     <div class="main d-flex flex-row p-2 bd-highlight">
       <section id="notesheet" class="rounded my-0 mx-auto">
-        <pdf src="/assets/AnotherBrickInTheWall.pdf" :page="1">
-          <template slot="loading">
-            loading content here...
-          </template>
-        </pdf>
-      <WebViewer :path="`${publicPath}lib`" url="https://www2.htw-dresden.de/~s77194/PBO/AnotherBrickInTheWall.pdf"/>  
-      <!--<WebViewer :path="'${publicPath}lib'" url = "file://C:/Users/Paul/Documents/Uni/PBO/pbo-gigbox/src/views/AnotherBrickInTheWall.pdf"/> !-->
-      <!--<PDFDocument url="https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS" scale=0.5> </PDFDocument>  !-->
+      <pdf :src="pdfURL" style="width:100%;">
+      </pdf>
       </section>
       <section id="organizer" class="rounded my-0 mx-auto">
         <datetime
@@ -45,42 +39,26 @@
 import { Datetime } from "vue-datetime";
 import draggable from "vuedraggable";
 import * as storage from "../assets/storage.js";
-import pdfjs from "pdfjs-dist";
-import WebViewer from "../components/WebViewer.vue"
-//import PDFDocument from "../components/PDFDocument.vue";
-//import pdf from 'vue-pdf';
+import pdf from 'vue-pdf';
 
 export default {
-  name: "Datepicker",
+  name: "Today",
   components: {
     datetime: Datetime,
     draggable,
-    //pdf
-    //PDFDocument
-    WebViewer
+    pdf
   },
 
   data() {
     return {
-      publicPath: process.env.BASE_URL,
-      url: "./assets/AnotherBrickInTheWall.pdf",
+      pdfURL: '',
       date: "",
       list2: [],
-      path: "AnotherBrickInTheWall.pdf",
-      pdfdata: pdfjs.getDocument('https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS')
     };
   },
   methods: {
-    getPdf () {
-      //self.pdfdata = pdfvuer.createLoadingTask('../assets/AnotherBrickInTheWall.pdf')
-      //self.pdfdata = pdfjs.getDocument("https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS");
-      },
-    showPdf: function() {
-      //let pfad = this.list2[key].path;
-      this.getPdf();
-      console.log(typeof('https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS'));
-      console.log(this.pdfdata);
-      alert(this.path);
+    showPdf: function(id) {
+      this.pdfURL = storage.getSongs()[id].url;
     },
 
     /* Date format: yyyy-mm-dd */
@@ -96,7 +74,6 @@ export default {
       return [year, month, day].join("-");
     }
   },
-
   watch: {
     /* If datepicker changes the date -> update view */
     date: function() {
