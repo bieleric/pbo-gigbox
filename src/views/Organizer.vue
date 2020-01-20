@@ -4,6 +4,7 @@
     <main>
       <b-container fluid>
         <b-row>
+          <!-- Datepicker -->
           <b-col cols="6" class="containerDates ">
             <b-row class="calendar">
               <full-calendar
@@ -15,7 +16,8 @@
               />
             </b-row>
           </b-col>
-          <b-col cols="4" class="containerFiles ">
+          <!-- Songlist -->
+          <b-col cols="4" class="containerFiles">
             <b-row class="sheets">
               <b-col>
                 <div class="w-90 rounded m-2 gig-header">
@@ -27,6 +29,7 @@
                 </div>
                 <draggable
                   v-model="songList"
+                  v-bind="dragOptions"
                   group="songs"
                   @start="
                     drag = true;
@@ -53,24 +56,25 @@
           </b-col>
         </b-row>
         <b-row>
+          <!-- Delete-Button -->
           <b-col offset-md="7" class="containerDeleteBtn">
-            <draggable
-              id="deleteContainer"
-              v-model="deleteList"
-              group="songs"
-              @start="drag = true"
-              @end="drag = false"
-              @change="deleteSong()"
-            >
-              <label id="deleteBtn" class="rounded border btn">
-                <font-awesome-icon
-                  icon="trash-alt"
-                  id="deleteIcon"
-                  class="icon"
-                />
-              </label>
-            </draggable>
+                <draggable
+                  id="deleteContainer"
+                  v-model="deleteList"
+                  group="songs"
+                  @start="drag = true"
+                  @end="drag = false"
+                  @change="deleteSong()"
+                  >
+                  <div slot="footer" class="footer">
+                    <label id="deleteBtn" class="rounded border border-danger">
+                      <font-awesome-icon icon="trash-alt" id="deleteIcon" />
+                      
+                    </label>
+                  </div>
+                </draggable>
           </b-col>
+          <!-- Add-Button -->
           <b-col class="containerAddBtn">
             <label for="addBtn" class="btn" id="addBtnLabel">
               <font-awesome-icon icon="plus" class="icon" />
@@ -80,6 +84,7 @@
         </b-row>
       </b-container>
     </main>
+    <!-- Modals -->
     <SongModal
       :currSongList="songList"
       v-on:updateSongList="updateSongList"
@@ -130,6 +135,7 @@ export default {
     };
   },
   methods: {
+    /* Handles single and doubleclicks for events */
     handleEventClick: function(info) {
       this.eId = info.eId;
       let idx = storage.getIdxForId(this.gigs, this.eId);
@@ -167,41 +173,56 @@ export default {
       }
       this.$bvModal.show("eventModal");
     },
+
+    /* Displays modal */
     modalShow: function() {
       this.$modal.show("SongModal");
     },
+
+    /* Update songlist */
     updateSongList: function(newList) {
       this.songList = newList;
       let idx = storage.getIdxForId(this.gigs, this.eId);
       this.gigs[idx].Songs = newList;
       this.changedGigs = !this.changedGigs;
     },
+
+    /* Update the current event */
     updateCurrEvent: function(newCurrEvent) {
       this.currEvent = newCurrEvent;
       this.eId = this.currEvent.eId;
       this.events = storage.getEvents();
       this.gigs = storage.getGigs();
     },
+
+    /* Deletes a gig */
     deleteEvent: function() {
       this.gigs = storage.getGigs();
       this.events = storage.getEvents();
       this.changedGigs = !this.changedGigs;
       this.changedEvents = !this.changedEvents;
     },
+
+    /* Toggles changedSongs */
     onDragEnd: function() {
       this.changedSongs = !this.changedSongs;
     },
-    displayTrash: function() {
+
+    /* Displays trashbucket */
+    displayTrash: function(){
       let trashContainer = document.getElementById("deleteBtn");
       if (this.trashVisible == true)
         trashContainer.style.visibility = "visible";
       else trashContainer.style.visibility = "hidden";
     },
-    deleteSong: function() {
-      console.log("Song: " + this.songId + " removed");
+
+    /* Delete song from localstorage after drop */
+    deleteSong: function(){
+      console.log("Song: "+ this.songId + " removed");
       storage.removeSong(this.songId);
       this.changedSongs = !this.changedSongs;
     },
+
     /* Sets id from element onDrag for delete-function */
     setID: function(e) {
       this.songId = e.draggedContext.element.name.split(" ")[1];
@@ -232,6 +253,18 @@ export default {
       this.events[idx] = this.currEvent;
       this.changedEvents = !this.changedEvents;
     }
+  },
+
+  computed: {
+    /* Switchanimation of dragged elements */
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "songs",
+        disabled: false,
+        ghostClass: "ghost"
+      };
+    }
   }
 };
 </script>
@@ -250,7 +283,7 @@ main {
   .containerFiles {
     border: solid 3px grey;
     border-radius: 10px;
-    margin: 0 auto 0 auto;
+    margin: 0 auto 5% auto;
   }
 
   .calendar {
@@ -264,11 +297,16 @@ main {
     background-color: white;
   }
 
+  /* Hand and grab cursor-animation and style of single songs */
   .drag {
-    cursor: move;
+    cursor: grab;
     height: 40px;
     vertical-align: middle;
     background-color: #42b983;
+  }
+
+  .drag:active {
+    cursor: grabbing;
   }
 
   .icon {
@@ -286,13 +324,44 @@ main {
     justify-content: center;
     margin-top: 2em;
   }
+  
+  /* Deletioncontainer to delete elements onDrop */
+  #deleteContainer {
+    height: 25px;
+    margin: -20% 20%;
+    display: block;
 
-  #deleteBtn {
-    visibility: hidden;
-    margin-left: 50%;
+    .trashzone .footer {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    #deleteBtn {
+      position: absolute;
+      display: inline-block;
+      background-color: rgba(255, 0, 0, 0.2);
+      width: 80%;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80%;
+      visibility: hidden;
+    }
+    #deleteIcon {
+      font-size: 300%;
+      color: rgba(255, 0, 0, 0.5);
+    }
   }
+
+  /* Add-Button for adding a song to an event */
   #addBtnLabel {
-    margin-left: 25%;
+    margin: -20% 0%;
+    width: 80%;
+    height: 50px;
   }
 }
 </style>
