@@ -91,6 +91,7 @@
 import draggable from "vuedraggable";
 import * as storage from "../assets/storage.js";
 
+const baseURL = "https://www2.htw-dresden.de/~s77194/PBO/";
 export default {
   name: "Yournotes",
 
@@ -120,7 +121,6 @@ export default {
 
     /* Loads the list from localStorage onLoad */
     initLoad: function() {
-      console.log("Load Songs");
       this.list2 = this.songs;
       this.display();
     },
@@ -168,7 +168,7 @@ export default {
 
         /* If a gap exists e.g.: id = 0, id = 2 -> id = 1 is missing add the new title with missing id */
         if (storedNames[j].id != j) {
-          let newSong = { name: title, id: j };
+          let newSong = { name: title, id: j, url: baseURL+pdf};
           storedNames.push(newSong);
           /* Sort elements for filling the gap */
           storedNames.sort(this.compareId);
@@ -177,7 +177,7 @@ export default {
           infoField.innerHTML = "Song successfully uploaded.";
           break;
         } else if (j == i - 1) {
-          let newSong = { name: title, id: j + 1 };
+          let newSong = { name: title, id: j + 1, url: baseURL+pdf};
           storedNames.push(newSong);
           console.log(storedNames);
           infoField.style.visibility = "visible";
@@ -187,6 +187,7 @@ export default {
       }
       storage.setSongs(storedNames);
       this.clear();
+      this.list2 = storage.getSongs();
     },
 
     /* Compare id's of the stored elements for save-function */

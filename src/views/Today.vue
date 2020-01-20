@@ -59,6 +59,7 @@ export default {
   methods: {
     showPdf: function(id) {
       this.pdfURL = storage.getSongs()[id].url;
+      console.log(this.pdfURL);
     },
 
     /* Date format: yyyy-mm-dd */
