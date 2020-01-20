@@ -8,7 +8,7 @@
           <b-col class="mb-5" cols="2">
             <!-- Save and Clear Buttons -->
             <label id="labelAddBtn" for="addBtn" class="btn addAndDeleteBtn"
-              ><font-awesome-icon icon="plus" class="icon"
+              ><font-awesome-icon icon="plus" class="icon" id="plus"
             /></label>
             <input
               type="file"
@@ -137,10 +137,13 @@ export default {
       let label = document.getElementById("labelAddBtn");
       let saveButton = document.getElementById("saveBtn");
       let clearButton = document.getElementById("clearBtn");
+      let plusIcon = document.getElementById("plus");
       let filename = input.files.item(0).name;
 
       label.innerHTML = filename;
+      label.style.fontSize = "80%";
 
+      console.log(plusIcon);
       clearButton.classList.add("show");
       saveButton.classList.add("show");
     },
@@ -229,14 +232,8 @@ export default {
       clearButton.classList.remove("show");
 
       input.value = "";
-      label.innerHTML = "";
-
-      let icon = document.createElement("font-awesome-icon");
-      icon.setAttribute("class", "icon");
-      icon.setAttribute("icon", "plus");
-      icon.style = "display: block; border: solid 3px red; padding: 20px;";
-
-      label.appendChild(icon);
+      label.innerHTML = "+";
+      label.style.fontSize = "500%";
     },
 
     /* Makes waste paper bin visible onDrag */
