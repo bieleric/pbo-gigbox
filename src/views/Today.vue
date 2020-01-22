@@ -2,8 +2,7 @@
   <div class="today">
     <div class="main d-flex flex-row p-2 bd-highlight">
       <section id="notesheet" class="rounded my-0 mx-auto">
-      <pdf :src="pdfURL" style="width:100%;">
-      </pdf>
+        <pdf :src="pdfURL" style="width:100%;"> </pdf>
       </section>
       <section id="organizer" class="rounded my-0 mx-auto">
         <datetime
@@ -39,7 +38,7 @@
 import { Datetime } from "vue-datetime";
 import draggable from "vuedraggable";
 import * as storage from "../assets/storage.js";
-import pdf from 'vue-pdf';
+import pdf from "vue-pdf";
 
 export default {
   name: "Today",
@@ -51,9 +50,9 @@ export default {
 
   data() {
     return {
-      pdfURL: '',
+      pdfURL: "",
       date: "",
-      list2: [],
+      list2: []
     };
   },
   methods: {

@@ -171,7 +171,7 @@ export default {
 
         /* If a gap exists e.g.: id = 0, id = 2 -> id = 1 is missing add the new title with missing id */
         if (storedNames[j].id != j) {
-          let newSong = { name: title, id: j, url: baseURL+pdf};
+          let newSong = { name: title, id: j, url: baseURL + pdf };
           storedNames.push(newSong);
           /* Sort elements for filling the gap */
           storedNames.sort(this.compareId);
@@ -180,7 +180,7 @@ export default {
           infoField.innerHTML = "Song successfully uploaded.";
           break;
         } else if (j == i - 1) {
-          let newSong = { name: title, id: j + 1, url: baseURL+pdf};
+          let newSong = { name: title, id: j + 1, url: baseURL + pdf };
           storedNames.push(newSong);
           console.log(storedNames);
           infoField.style.visibility = "visible";

@@ -58,21 +58,20 @@
         <b-row>
           <!-- Delete-Button -->
           <b-col offset-md="7" class="containerDeleteBtn">
-                <draggable
-                  id="deleteContainer"
-                  v-model="deleteList"
-                  group="songs"
-                  @start="drag = true"
-                  @end="drag = false"
-                  @change="deleteSong()"
-                  >
-                  <div slot="footer" class="footer">
-                    <label id="deleteBtn" class="rounded border border-danger">
-                      <font-awesome-icon icon="trash-alt" id="deleteIcon" />
-                      
-                    </label>
-                  </div>
-                </draggable>
+            <draggable
+              id="deleteContainer"
+              v-model="deleteList"
+              group="songs"
+              @start="drag = true"
+              @end="drag = false"
+              @change="deleteSong()"
+            >
+              <div slot="footer" class="footer">
+                <label id="deleteBtn" class="rounded border border-danger">
+                  <font-awesome-icon icon="trash-alt" id="deleteIcon" />
+                </label>
+              </div>
+            </draggable>
           </b-col>
           <!-- Add-Button -->
           <b-col class="containerAddBtn">
@@ -209,7 +208,7 @@ export default {
     },
 
     /* Displays trashbucket */
-    displayTrash: function(){
+    displayTrash: function() {
       let trashContainer = document.getElementById("deleteBtn");
       if (this.trashVisible == true)
         trashContainer.style.visibility = "visible";
@@ -217,8 +216,8 @@ export default {
     },
 
     /* Delete song from localstorage after drop */
-    deleteSong: function(){
-      console.log("Song: "+ this.songId + " removed");
+    deleteSong: function() {
+      console.log("Song: " + this.songId + " removed");
       storage.removeSong(this.songId);
       this.changedSongs = !this.changedSongs;
     },
@@ -324,7 +323,7 @@ main {
     justify-content: center;
     margin-top: 2em;
   }
-  
+
   /* Deletioncontainer to delete elements onDrop */
   #deleteContainer {
     height: 25px;

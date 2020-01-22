@@ -43,16 +43,15 @@ export function removeSong(song) {
   let storedGigs = this.getGigs();
 
   let gigsLength = storedGigs.length;
-  for(let n=0; n < gigsLength; n++){
+  for (let n = 0; n < gigsLength; n++) {
     let gigSongs = storedGigs[n].Songs;
     let i = gigSongs.length;
-    while(i-- > 0) {
-      if(gigSongs[i].name === song){
-      //remove item selected, second parameter is the number of items to delete
-        gigSongs.splice(i,1);
+    while (i-- > 0) {
+      if (gigSongs[i].name === song) {
+        //remove item selected, second parameter is the number of items to delete
+        gigSongs.splice(i, 1);
       }
     }
-
   }
 
   this.setGigs(storedGigs);
